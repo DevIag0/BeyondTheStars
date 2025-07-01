@@ -1,5 +1,4 @@
 # Constantes Game
-
 # C
 COLOR_ORANGE = (139,0,0)
 COLOR_WHITE = (255, 255, 255)
@@ -12,6 +11,15 @@ ENTITY_SPEED = {
     'Level1bg3': 4,
     'Level1bg4': 5,
 }
+
+PLAYER_SPEED = {
+    'Player0': 5,
+    'Player1': 5,
+    'Player2': 5,
+}
+# F
+
+FPS_GAME = (30, 60)
 
 # M
 MENU_OPTION = ("NEW GAME 1P",
