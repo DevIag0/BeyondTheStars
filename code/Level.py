@@ -35,6 +35,14 @@ class Level:
         self.window.blit(continue_text, continue_rect)
         self.window.blit(exit_text, exit_rect)
 
+    def pause_musica(self):
+        self.paused = not self.paused
+        # Pausa ou retoma a música dependendo do pause do do jogo
+        if self.paused:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.unpause()
+
     def run(self,):
         clock = pygame.time.Clock()  # para controlar a taxa de quadros
 
@@ -59,14 +67,14 @@ class Level:
                     quit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
-                        self.paused = not self.paused
+                        self.pause_musica()
                     elif event.key == pygame.K_ESCAPE:
                         if self.paused:
                             # Se estiver pausado, ESC sai do nível
                             return "menu"
                         else:
                             # Se não estiver pausado, ESC pausa o jogo
-                            self.paused = True
+                            self.pause_musica()
 
             # Limita a taxa de quadros
             clock.tick(60)

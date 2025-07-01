@@ -9,7 +9,7 @@ class EntityFactory:
         match entity_name:
             case "Level1bg":
                 list_bg = []
-                for i in range(3):
+                for i in range(4):
                     list_bg.append(Background(name=f'Level1bg{i}',position=(0, 0)))
                     list_bg.append(Background(name=f'Level1bg{i}', position=(0, -ALTURA_JANELA)))
 
