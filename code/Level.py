@@ -4,7 +4,7 @@ from pygame.rect import Rect
 from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, LARGURA_JANELA, ALTURA_JANELA
 
 
 class Level:
@@ -14,8 +14,10 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
+        self.entity_list.append(EntityFactory.get_entity('Player')) # adiciona o jogador ao nível
         self.paused = False  # adiciona um estado para controlar a pausa
         self.timeout = 150000  # tempo limite do nível em milissegundos
+
 
     def pause_menu(self):
         overlay = pygame.Surface(self.window.get_size())
@@ -42,7 +44,7 @@ class Level:
 
     def pause_musica(self):
         self.paused = not self.paused
-        # Pausa ou retoma a música dependendo do pause do do jogo
+        # Pausa ou retoma a música dependendo do pause do jogo
         if self.paused:
             pygame.mixer.music.pause()
         else:
@@ -53,12 +55,12 @@ class Level:
 
         while True:
             # Limita a taxa de quadros
-            clock.tick(60)
+            clock.tick(FPS_GAME[1])  # FPS do jogo
 
+            # Atualiza animação do player
             # Desenhar entidades
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
-                # Só move as entidades se o jogo não estiver pausado
                 if not self.paused:
                     ent.move()
 
