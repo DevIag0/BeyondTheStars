@@ -1,0 +1,53 @@
+from code.Entity import Entity
+import pygame
+
+class Player(Entity):
+    def __init__(self, name: str, position: tuple):
+        super().__init__(name, position)
+        # Lista para armazenar os frames da animação
+        self.frames = [
+            pygame.image.load('./asset/Player1_slow.png').convert_alpha(),
+            pygame.image.load('./asset/Player1.png').convert_alpha(),
+            pygame.image.load('./asset/Player1_boost.png').convert_alpha(),
+            #pygame.image.load('./asset/Player3.png').convert_alpha(),
+            #pygame.image.load('./asset/Player4.png').convert_alpha(),
+            #pygame.image.load('./asset/Player5.png').convert_alpha(),
+        ]
+
+        # Configuração da animação
+        self.frame_index = 0
+        self.animation_timer = 0
+        self.animation_speed = 150  # milissegundos entre frames
+        self.last_update_time = pygame.time.get_ticks()
+
+    def move(self,):
+
+
+        # Verifica se as teclas de seta estão pressionadas e move o jogador
+        pressed_key = pygame.key.get_pressed()
+        if pressed_key[pygame.K_UP] and self.rect.top > 0:
+            self.rect.centery -= 5
+            self.frame_index = 2  # Reseta o frame para o primeiro ao mover para cima
+        if pressed_key[pygame.K_DOWN] and self.rect.bottom < pygame.display.get_surface().get_height():
+            self.rect.centery += 5
+            self.frame_index = 0  # Reseta o frame para o primeiro ao mover para baixo
+        if pressed_key[pygame.K_LEFT] and self.rect.left > 0:
+            self.rect.centerx -= 5
+        if pressed_key[pygame.K_RIGHT] and self.rect.right < pygame.display.get_surface().get_width():
+            self.rect.centerx += 5
+
+        self.animacao_frente_atras()
+
+    def animacao_frente_atras(self,):        # Lógica de animação
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update_time > self.animation_speed:
+            self.last_update_time = current_time
+            # Avança para o próximo frame e volta ao início se chegou ao final
+            self.frame_index = (self.frame_index + 1) % len(self.frames)
+            # Atualiza a imagem atual para o frame correto
+            self.surf = self.frames[self.frame_index]
+        # Define a imagem do jogador como o frame atual
+
+    def animacao_lateral(self,):
+        pass
+
