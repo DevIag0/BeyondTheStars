@@ -1,3 +1,4 @@
+import sys
 import pygame
 from code.Const import COLOR_ORANGE, COLOR_WHITE, MENU_OPTION
 from pygame.rect import Rect
@@ -7,9 +8,9 @@ from pygame.surface import Surface
 
 
 class Menu:
-    def __init__(self, window, volume=0.5):
+    def __init__(self, window, volume=0.2):
         self.window = window
-        self.surf = pygame.image.load("./asset/Level1bg0.png").convert()
+        self.surf = pygame.image.load("./asset/Level1bg0.png").convert_alpha()
         self.rect = self.surf.get_rect(left=0, top=0)  # definir a posição do menu
         self.volume = volume
 
@@ -43,7 +44,7 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # fechar a janela
                     pygame.quit()  # fechar o pygame
-                    quit()  # sair do jogo
+                    sys.exit()  # sair do jogo
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:  # tecla para baixo
                         menu_option += 1

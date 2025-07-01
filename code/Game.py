@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from code.Menu import Menu
 from code.Const import ALTURA_JANELA, LARGURA_JANELA, MENU_OPTION
@@ -9,7 +11,7 @@ class Game:
         pygame.init()  # inicializar o pygame
         self.window = pygame.display.set_mode(size=(ALTURA_JANELA, LARGURA_JANELA))  # cria a janela do jogo
         pygame.display.set_caption("Beyond the Stars")  # define nome na janela
-        self.volume = 0.5  # volume global
+        self.volume = 0.2  # volume global
 
     def run(self):
         # loop principal do jogo
@@ -39,4 +41,4 @@ class Game:
             elif menu_return == MENU_OPTION[5]:  # se a opção selecionada for "EXIT"
                 print("Sair do jogo")
                 pygame.quit()  # fechar o pygame
-                quit()  # sair do programa
+                sys.exit()  # sair do programa

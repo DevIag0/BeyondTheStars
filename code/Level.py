@@ -1,4 +1,7 @@
+import sys
 import pygame
+from pygame.rect import Rect
+from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.Const import COLOR_WHITE, COLOR_ORANGE
@@ -10,8 +13,9 @@ class Level:
         self.name = name
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []  # lista de entidades no nível
-        self.entity_list.extend(EntityFactory.get_entity('Level1bg')) # adiciona entidades ao nível
+        self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
         self.paused = False  # adiciona um estado para controlar a pausa
+        self.timeout = 150000  # tempo limite do nível em milissegundos
 
     def pause_menu(self):
         overlay = pygame.Surface(self.window.get_size())
@@ -29,7 +33,8 @@ class Level:
         continue_text = font_small.render("Pressione P para continuar", True, COLOR_ORANGE)
         exit_text = font_small.render("Pressione ESC para sair", True, COLOR_ORANGE)
 
-        continue_rect = continue_text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 + 30))
+        continue_rect = continue_text.get_rect(
+            center=(self.window.get_width() // 2, self.window.get_height() // 2 + 30))
         exit_rect = exit_text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 + 80))
 
         self.window.blit(continue_text, continue_rect)
@@ -43,10 +48,13 @@ class Level:
         else:
             pygame.mixer.music.unpause()
 
-    def run(self,):
+    def run(self, ):
         clock = pygame.time.Clock()  # para controlar a taxa de quadros
 
         while True:
+            # Limita a taxa de quadros
+            clock.tick(60)
+
             # Desenhar entidades
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
@@ -58,13 +66,19 @@ class Level:
             if self.paused:
                 self.pause_menu()
 
+            # imprimir o texto do nível
+            self.level_text(20, f"Sobreviva: {self.timeout // 1000} segundos", COLOR_WHITE, (50, 10))
+            self.level_text(20, f"Nível: {self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
+            self.level_text(20, f"Fps: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 100, 10))
+            self.level_text(20, f"Entidades: {len(self.entity_list)}", COLOR_WHITE, (self.window.get_width() - 200, 10))
+
             pygame.display.flip()
 
             # Gerencia os eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
                         self.pause_musica()
@@ -76,5 +90,8 @@ class Level:
                             # Se não estiver pausado, ESC pausa o jogo
                             self.pause_musica()
 
-            # Limita a taxa de quadros
-            clock.tick(60)
+    def level_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
+        text_font = pygame.font.SysFont(None, size=text_size)
+        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
+        text_rect: Rect = text_surf.get_rect(left=text_center_pos[0], top=text_center_pos[1])
+        self.window.blit(source=text_surf, dest=text_rect)

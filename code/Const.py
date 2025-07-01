@@ -16,13 +16,16 @@ ENTITY_SPEED = {
 # M
 MENU_OPTION = ("NEW GAME 1P",
                "NEW GAME 2P - COOPERATIVE",
-               "NEW GAME 2P - COMPETITIVE",
+               "PLAYER VS PLAYER",
                "SCORE",
                "OPÇÕES",
                "EXIT")
 
 #O
-OPTIONS_GAME = ("VOLUME", "DIFICULDADE", "CONTROLES")
+OPTIONS_GAME = ("VOLUME",
+                "DIFICULDADE",
+                "TAXA DE QUADROS",
+                "RETORNAR")
 
 # w
 ALTURA_JANELA = 800

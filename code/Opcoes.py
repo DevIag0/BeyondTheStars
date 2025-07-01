@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE
 from code.Menu import Menu
@@ -22,7 +24,7 @@ class Opcoes(Menu):
             for index, option in enumerate(OPTIONS_GAME):
                 color = COLOR_WHITE if index == self.selected_option else COLOR_ORANGE
                 self.menu_text(text_size=40, text=option, text_color=color,
-                               text_center_pos=(self.window.get_width() // 2, 350 + index * 50))
+                               text_center_pos=(self.window.get_width() // 2, 330 + index * 50))
 
             # Exibe o volume se a opção selecionada para volume estiver ativa
             if self.selected_option == 0:
@@ -35,10 +37,10 @@ class Opcoes(Menu):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        return self.volume  # retorna o volume ao sair
+                        return self.volume  # retorna o volume ao apertar ESC
                     if event.key == pygame.K_DOWN:
                         self.selected_option = (self.selected_option + 1) % len(OPTIONS_GAME)
                     if event.key == pygame.K_UP:
@@ -50,3 +52,9 @@ class Opcoes(Menu):
                         if event.key == pygame.K_LEFT:
                             self.volume = max(self.volume - 0.1, 0.0)
                             pygame.mixer.music.set_volume(self.volume)
+                    if self.selected_option == 3:  # Se a opção selecionada for "Voltar"
+                        if event.key == pygame.K_RETURN:
+                            return self.volume
+
+
+
