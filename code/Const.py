@@ -18,6 +18,18 @@ ENTITY_SPEED = {
     'Enemy2': 3,
 }
 
+ENTITY_VIDA = {
+    'Level1bg0': 9999,
+    'Level1bg1': 9999,
+    'Level1bg2': 9999,
+    'Level1bg3': 9999,
+    'Level1bg4': 9999,
+    'Player1': 300,
+    'Player2': 300,
+    'Enemy1': 100,
+    'Enemy2': 50,
+}
+
 EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
 # F
@@ -50,6 +62,9 @@ PLAYER_KEY_RIGHT = {'Player1': pygame.K_RIGHT,
 
 # s
 SPAWN_TIME = 2500
+
+
 # w
 ALTURA_JANELA = 800
 LARGURA_JANELA = 800
+

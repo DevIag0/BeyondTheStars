@@ -22,8 +22,6 @@ class Enemy(Entity):
 
     def move(self, ):
         self.rect.centery += ENTITY_SPEED[self.name]
-        if self.rect.top >= ALTURA_JANELA:
-            self.rect.top = -ALTURA_JANELA
 
         self.animacao_frente_atras()
 

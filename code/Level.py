@@ -6,6 +6,7 @@ from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
+from code.EntityMediator import EntityMediator
 
 
 class Level:
@@ -60,7 +61,6 @@ class Level:
             # Limita a taxa de quadros
             clock.tick(FPS_GAME[1])  # FPS do jogo
 
-            # Atualiza animação do player
             # Desenhar entidades
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
@@ -79,6 +79,9 @@ class Level:
                             (self.window.get_width() - 200, 10))
 
             pygame.display.flip()
+
+            EntityMediator.verify_collision(entity_list=self.entity_list)
+            EntityMediator.verify_health(entity_list=self.entity_list)
 
             # Gerencia os eventos
             for event in pygame.event.get():
