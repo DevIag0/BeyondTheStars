@@ -64,6 +64,7 @@ class Level:
             # Desenhar entidades
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
+                # CHAVE: Só move entidades quando não está pausado
                 if not self.paused:
                     ent.move()
 
@@ -80,15 +81,18 @@ class Level:
 
             pygame.display.flip()
 
-            EntityMediator.verify_collision(entity_list=self.entity_list)
-            EntityMediator.verify_health(entity_list=self.entity_list)
+            # IMPORTANTE: Só verifica colisões e saúde quando não está pausado
+            if not self.paused:
+                EntityMediator.verify_collision(entity_list=self.entity_list)
+                EntityMediator.verify_health(entity_list=self.entity_list)
 
             # Gerencia os eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == EVENT_ENEMY:  # Evento para gerar inimigos
+                # IMPORTANTE: Só gera inimigos quando não está pausado
+                if event.type == EVENT_ENEMY and not self.paused:  # Evento para gerar inimigos
                     choice = random.choice(('Enemy1', 'Enemy2'))  # Escolhe um inimigo aleatório
                     self.entity_list.append(EntityFactory.get_entity(choice))
 
