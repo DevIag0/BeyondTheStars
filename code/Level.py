@@ -3,10 +3,13 @@ import sys
 import pygame
 from pygame.rect import Rect
 from pygame.surface import Surface
+
+from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
 from code.EntityMediator import EntityMediator
+from code.Player import Player
 
 
 class Level:
@@ -67,6 +70,10 @@ class Level:
                 # CHAVE: Só move entidades quando não está pausado
                 if not self.paused:
                     ent.move()
+                    if isinstance(ent, (Player, Enemy)):
+                        shoot = ent.shoot()  # Verifica se a entidade pode atirar
+                        if shoot is not None:
+                            self.entity_list.append(shoot)
 
             # Se o jogo estiver pausado, desenha o menu de pausa
             if self.paused:

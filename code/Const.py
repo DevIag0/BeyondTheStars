@@ -13,9 +13,20 @@ ENTITY_SPEED = {
     'Level1bg3': 4,
     'Level1bg4': 5,
     'Player1': 5,
+    'Player1Shot': 8,
     'Player2': 5,
-    'Enemy1': 2,
-    'Enemy2': 3,
+    'Player2Shot': 7,
+    'Enemy1': 3,
+    'Enemy1Shot': 5,
+    'Enemy2': 2,
+    'Enemy2Shot': 4,
+}
+
+ENTITY_SHOT_DELAY = {
+    'Player1': 20,
+    'Player2': 15,
+    'Enemy1': 100,
+    'Enemy2': 120,
 }
 
 ENTITY_VIDA = {
@@ -25,9 +36,13 @@ ENTITY_VIDA = {
     'Level1bg3': 9999,
     'Level1bg4': 9999,
     'Player1': 300,
+    'Player1Shot':1,
     'Player2': 300,
+    'Player2Shot':1,
     'Enemy1': 100,
+    'Enemy1Shot': 1,
     'Enemy2': 50,
+    'Enemy2Shot': 1,
 }
 
 EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
@@ -59,12 +74,12 @@ PLAYER_KEY_LEFT = {'Player1': pygame.K_LEFT,
                    'Player2': pygame.K_a}
 PLAYER_KEY_RIGHT = {'Player1': pygame.K_RIGHT,
                     'Player2': pygame.K_d}
+PLAYER_KEY_SHOOT = {'Player1': pygame.K_SPACE,
+                    'Player2': pygame.K_g}
 
 # s
-SPAWN_TIME = 2500
-
+SPAWN_TIME = 1000
 
 # w
 ALTURA_JANELA = 800
 LARGURA_JANELA = 800
-

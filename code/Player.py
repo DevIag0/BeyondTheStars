@@ -1,8 +1,8 @@
 import pygame
-from code.Const import PLAYER_KEY_RIGHT, PLAYER_KEY_LEFT, PLAYER_KEY_DOWN, PLAYER_KEY_UP, ENTITY_SPEED
+from code.Const import PLAYER_KEY_RIGHT, PLAYER_KEY_LEFT, PLAYER_KEY_DOWN, PLAYER_KEY_UP, ENTITY_SPEED, \
+    PLAYER_KEY_SHOOT, ENTITY_SHOT_DELAY
 from code.Entity import Entity
-
-
+from code.PlayerShot import PlayerShot
 
 class Player(Entity):
     def __init__(self, name: str, position: tuple):
@@ -12,6 +12,7 @@ class Player(Entity):
             pygame.image.load(f"./asset/{name}_slow.png").convert_alpha(),
             pygame.image.load(f"./asset/{name}_boost.png").convert_alpha()
         ]
+        self.shot_delay = ENTITY_SHOT_DELAY[self.name]  # Tempo de espera entre os tiros
 
         # Configuração da animação
         self.frame_index = 0
@@ -48,3 +49,12 @@ class Player(Entity):
 
     def animacao_lateral(self, ):
         pass
+
+    def shoot(self):
+        self.shot_delay -= 1
+        if self.shot_delay == 0:
+            self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+            pressed_key = pygame.key.get_pressed()
+            if pressed_key[PLAYER_KEY_SHOOT[self.name]]:
+                return PlayerShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.top))
+        return None
