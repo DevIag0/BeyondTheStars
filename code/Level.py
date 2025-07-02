@@ -1,10 +1,11 @@
+import random
 import sys
 import pygame
 from pygame.rect import Rect
 from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
 
 
 class Level:
@@ -14,13 +15,12 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
-        self.entity_list.append(EntityFactory.get_entity('Player1')) # adiciona o jogador ao nível
+        self.entity_list.append(EntityFactory.get_entity('Player1'))  # adiciona o jogador ao nível
         self.paused = False  # adiciona um estado para controlar a pausa
         self.timeout = 150000  # tempo limite do nível em milissegundos
         if game_mode in [MENU_OPTION[1]]:
             self.entity_list.append(EntityFactory.get_entity('Player2'))
-        pygame.time.set_timer(EVENT_ENEMY, 2000)  # define um evento para gerar inimigos a cada 2 segundos
-
+        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)  # define um evento para gerar inimigos a cada 2 segundos
 
     def pause_menu(self):
         overlay = pygame.Surface(self.window.get_size())
@@ -53,7 +53,6 @@ class Level:
         else:
             pygame.mixer.music.unpause()
 
-
     def run(self, ):
         clock = pygame.time.Clock()  # para controlar a taxa de quadros
 
@@ -74,9 +73,10 @@ class Level:
 
             # imprimir o texto do nível
             self.level_text(20, f"Sobreviva: {self.timeout // 1000} segundos", COLOR_WHITE, (50, 10))
-            self.level_text(20, f"Nível: {self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
+            self.level_text(20, f"{self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
             self.level_text(20, f"Fps: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 100, 10))
-            self.level_text(20, f"Entidades: {len(self.entity_list)}", COLOR_WHITE, (self.window.get_width() - 200, 10))
+            self.level_text(20, f"Inimigos: {len(self.entity_list) - 9}", COLOR_WHITE,
+                            (self.window.get_width() - 200, 10))
 
             pygame.display.flip()
 
@@ -86,7 +86,8 @@ class Level:
                     pygame.quit()
                     sys.exit()
                 if event.type == EVENT_ENEMY:  # Evento para gerar inimigos
-                    self.entity_list.append(EntityFactory.get_entity('Enemy1'))
+                    choice = random.choice(('Enemy1', 'Enemy2'))  # Escolhe um inimigo aleatório
+                    self.entity_list.append(EntityFactory.get_entity(choice))
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
