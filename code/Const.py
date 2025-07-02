@@ -13,7 +13,11 @@ ENTITY_SPEED = {
     'Level1bg4': 5,
     'Player1': 5,
     'Player2': 5,
+    'Enemy1': 2,
+    'Enemy2': 3,
 }
+
+EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
 # F
 

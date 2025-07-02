@@ -4,7 +4,7 @@ from pygame.rect import Rect
 from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, LARGURA_JANELA, ALTURA_JANELA, MENU_OPTION
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY
 
 
 class Level:
@@ -15,10 +15,11 @@ class Level:
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
         self.entity_list.append(EntityFactory.get_entity('Player1')) # adiciona o jogador ao nível
-        if game_mode in [MENU_OPTION[1]]:
-            self.entity_list.append(EntityFactory.get_entity('Player2'))
         self.paused = False  # adiciona um estado para controlar a pausa
         self.timeout = 150000  # tempo limite do nível em milissegundos
+        if game_mode in [MENU_OPTION[1]]:
+            self.entity_list.append(EntityFactory.get_entity('Player2'))
+        pygame.time.set_timer(EVENT_ENEMY, 2000)  # define um evento para gerar inimigos a cada 2 segundos
 
 
     def pause_menu(self):
@@ -84,6 +85,9 @@ class Level:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == EVENT_ENEMY:  # Evento para gerar inimigos
+                    self.entity_list.append(EntityFactory.get_entity('Enemy1'))
+
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
                         self.pause_musica()
