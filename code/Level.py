@@ -4,7 +4,7 @@ from pygame.rect import Rect
 from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, LARGURA_JANELA, ALTURA_JANELA
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, LARGURA_JANELA, ALTURA_JANELA, MENU_OPTION
 
 
 class Level:
@@ -14,7 +14,9 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
-        self.entity_list.append(EntityFactory.get_entity('Player')) # adiciona o jogador ao nível
+        self.entity_list.append(EntityFactory.get_entity('Player1')) # adiciona o jogador ao nível
+        if game_mode in [MENU_OPTION[1]]:
+            self.entity_list.append(EntityFactory.get_entity('Player2'))
         self.paused = False  # adiciona um estado para controlar a pausa
         self.timeout = 150000  # tempo limite do nível em milissegundos
 
@@ -49,6 +51,7 @@ class Level:
             pygame.mixer.music.pause()
         else:
             pygame.mixer.music.unpause()
+
 
     def run(self, ):
         clock = pygame.time.Clock()  # para controlar a taxa de quadros
