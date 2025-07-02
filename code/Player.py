@@ -1,3 +1,4 @@
+from code.Const import PLAYER_KEY_RIGHT, PLAYER_KEY_LEFT, PLAYER_KEY_DOWN, PLAYER_KEY_UP, ENTITY_SPEED
 from code.Entity import Entity
 import pygame
 
@@ -22,19 +23,18 @@ class Player(Entity):
 
     def move(self,):
 
-
         # Verifica se as teclas de seta estão pressionadas e move o jogador
         pressed_key = pygame.key.get_pressed()
-        if pressed_key[pygame.K_UP] and self.rect.top > 0:
-            self.rect.centery -= 5
+        if pressed_key[PLAYER_KEY_UP[self.name]] and self.rect.top > 0:
+            self.rect.centery -= ENTITY_SPEED[self.name]
             self.frame_index = 2  # Reseta o frame para o primeiro ao mover para cima
-        if pressed_key[pygame.K_DOWN] and self.rect.bottom < pygame.display.get_surface().get_height():
-            self.rect.centery += 5
+        if pressed_key[PLAYER_KEY_DOWN[self.name]] and self.rect.bottom < pygame.display.get_surface().get_height():
+            self.rect.centery += ENTITY_SPEED[self.name]
             self.frame_index = 0  # Reseta o frame para o primeiro ao mover para baixo
-        if pressed_key[pygame.K_LEFT] and self.rect.left > 0:
-            self.rect.centerx -= 5
-        if pressed_key[pygame.K_RIGHT] and self.rect.right < pygame.display.get_surface().get_width():
-            self.rect.centerx += 5
+        if pressed_key[PLAYER_KEY_LEFT[self.name]] and self.rect.left > 0:
+            self.rect.centerx -= ENTITY_SPEED[self.name]
+        if pressed_key[PLAYER_KEY_RIGHT[self.name]] and self.rect.right < pygame.display.get_surface().get_width():
+            self.rect.centerx += ENTITY_SPEED[self.name]
 
         self.animacao_frente_atras()
 
