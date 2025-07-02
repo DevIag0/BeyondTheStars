@@ -16,6 +16,9 @@ class EntityFactory:
 
                 return list_bg
 
-            case "Player":
-                return Player('Player1', position=(LARGURA_JANELA // 2, ALTURA_JANELA // 2 - 100))
+            case "Player1":
+                return Player('Player1', position=(LARGURA_JANELA // 2 - 30, ALTURA_JANELA - 100))
+
+            case "Player2":
+                return Player('Player2', position=(LARGURA_JANELA // 2 + 30, ALTURA_JANELA - 100))
 
