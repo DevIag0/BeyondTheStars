@@ -7,7 +7,7 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, ENTITY_VIDA
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
@@ -75,6 +75,9 @@ class Level:
                         if shoot is not None:
                             self.entity_list.append(shoot)
 
+
+
+
             # Se o jogo estiver pausado, desenha o menu de pausa
             if self.paused:
                 self.pause_menu()
@@ -93,6 +96,12 @@ class Level:
                 EntityMediator.verify_collision(entity_list=self.entity_list)
                 EntityMediator.verify_health(entity_list=self.entity_list)
 
+            # Verifica se algum jogador morreu para exibir Game Over
+            jogadores = [e for e in self.entity_list if isinstance(e, Player)] # Lista de jogadores
+            if any(jogador.health <= 0 for jogador in jogadores):
+                self.game_over()
+                return "menu"
+
             # Gerencia os eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -106,7 +115,7 @@ class Level:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
                         self.pause_musica()
-                    elif event.key == pygame.K_ESCAPE:
+                    elif event.key == pygame.K_ESCAPE: # Tecla ESC para sair do nível
                         if self.paused:
                             # Se estiver pausado, ESC sai do nível
                             return "menu"
@@ -119,3 +128,15 @@ class Level:
         text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
         text_rect: Rect = text_surf.get_rect(left=text_center_pos[0], top=text_center_pos[1])
         self.window.blit(source=text_surf, dest=text_rect)
+
+    def game_over(self):
+        overlay = pygame.Surface(self.window.get_size())
+        overlay.set_alpha(180)
+        overlay.fill((0, 0, 0))
+        self.window.blit(overlay, (0, 0))
+        font = pygame.font.SysFont(None, 100)
+        text = font.render("GAME OVER", True, (255, 0, 0))
+        text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
+        self.window.blit(text, text_rect)
+        pygame.display.flip()
+        pygame.time.wait(3000)
