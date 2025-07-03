@@ -24,7 +24,7 @@ class EntityMediator:
 
     @staticmethod
     def verify_collision(entity_list: list[Entity]):
-        enemies_destroyed_by_shots = 0  # Contador para inimigos destruídos por tiros
+        enemies_destroyed_by_shots = {'Player1': 0, 'Player2': 0}  # Contador separado para cada jogador
 
         # Sistema simples e didático de colisão
         tiros_player = [e for e in entity_list if isinstance(e, PlayerShot)]
@@ -46,9 +46,11 @@ class EntityMediator:
                 if tiro.rect.colliderect(inimigo.rect):
                     inimigo.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
-                    # Se o inimigo morreu com esse tiro, conta para o score
+                    # Se o inimigo morreu com esse tiro, conta para o score do jogador correto
                     if inimigo.health <= 0:
-                        enemies_destroyed_by_shots += 1
+                        # Converte 'Player1Shot' para 'Player1' e 'Player2Shot' para 'Player2'
+                        player_name = tiro.name.replace('Shot', '')
+                        enemies_destroyed_by_shots[player_name] += 1
 
         # Tiros do player atingem meteoros
         for tiro in tiros_player:
@@ -56,9 +58,11 @@ class EntityMediator:
                 if tiro.rect.colliderect(meteoro.rect):
                     meteoro.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
-                    # Se o meteoro morreu com esse tiro, conta para o score
+                    # Se o meteoro morreu com esse tiro, conta para o score do jogador correto
                     if meteoro.health <= 0:
-                        enemies_destroyed_by_shots += 1
+                        # Converte 'Player1Shot' para 'Player1' e 'Player2Shot' para 'Player2'
+                        player_name = tiro.name.replace('Shot', '')
+                        enemies_destroyed_by_shots[player_name] += 1
 
         # Tiros do inimigo atingem jogadores
         for tiro in tiros_inimigo:

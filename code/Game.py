@@ -23,7 +23,7 @@ class Game:
             menu_return, self.volume = menu.run()  # recebe também o volume atualizado
 
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1], MENU_OPTION[2]]:
-                print("Iniciar jogo 1P")
+                # se a opção selecionada for "NEW GAME 1P", "NEW GAME 2P - COOPERATIVE" ou "PLAYER VS PLAYER"
                 level = Level(self.window, "Level1", menu_return, self.fps_index)
                 level_return = level.run()
 
@@ -40,6 +40,5 @@ class Game:
 
 
             elif menu_return == MENU_OPTION[5]:  # se a opção selecionada for "EXIT"
-                print("Sair do jogo")
                 pygame.quit()  # fechar o pygame
                 sys.exit()  # sair do programa
