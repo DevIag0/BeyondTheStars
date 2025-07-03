@@ -8,6 +8,7 @@ from code.PlayerShot import PlayerShot
 
 class EntityMediator:
 
+
     @staticmethod
     def __verify_collision_window(ent: Entity):  # Verifica se as entidades estão dentro dos limites da janela
         if isinstance(ent, Enemy):
@@ -22,6 +23,8 @@ class EntityMediator:
 
     @staticmethod
     def verify_collision(entity_list: list[Entity]):
+        enemies_destroyed_by_shots = 0  # Contador para inimigos destruídos por tiros
+
         # Sistema simples e didático de colisão
         tiros_player = [e for e in entity_list if isinstance(e, PlayerShot)]
         tiros_inimigo = [e for e in entity_list if isinstance(e, EnemyShot)]
@@ -41,6 +44,9 @@ class EntityMediator:
                 if tiro.rect.colliderect(inimigo.rect):
                     inimigo.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
+                    # Se o inimigo morreu com esse tiro, conta para o score
+                    if inimigo.health <= 0:
+                        enemies_destroyed_by_shots += 1
 
         # Tiros do inimigo atingem jogadores
         for tiro in tiros_inimigo:
@@ -53,10 +59,11 @@ class EntityMediator:
         for ent in entity_list:
             EntityMediator.__verify_collision_window(ent)
 
+        return enemies_destroyed_by_shots
+
     @staticmethod
     def verify_health(entity_list: list[Entity]):  # Verifica a saúde das entidades
         for ent in entity_list[:]:
             # Só remove se não for Player
             if ent.health <= 0 and not isinstance(ent, Player):
                 entity_list.remove(ent)
-

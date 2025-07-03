@@ -7,7 +7,7 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, ENTITY_VIDA
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
@@ -25,6 +25,7 @@ class Level:
         if game_mode in [MENU_OPTION[1]]:
             self.entity_list.append(EntityFactory.get_entity('Player2'))
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)  # define um evento para gerar inimigos a cada 2 segundos
+        self.score = 0  # Inicializa o score
 
     def pause_menu(self):
         overlay = pygame.Surface(self.window.get_size())
@@ -80,29 +81,35 @@ class Level:
                 self.pause_menu()
 
             # imprimir o texto do nível
-            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_WHITE, (50, 10))
+            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_WHITE, (30, 10))
             #self.level_text(20, f"{self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
-            self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 100, 10))
+            self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 180, 10))
+            self.level_text(20, f"SCORE: {self.score}", COLOR_ORANGE, (self.window.get_width() - 100, 10))
             self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_WHITE,
-                            (self.window.get_width() - 200, 10))
+                            (self.window.get_width() - 300, 10))
+            # Mostra a pontuação do jogador
 
             # Mostra a vida do player atual (Player1)
             player1 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player1'), None)
             vida_player1 = player1.health if player1 else 0
-            self.level_text(20, f"VIDA: {vida_player1}", COLOR_WHITE, (self.window.get_width() - 300, 10))
+            self.level_text(20, f"PLAYER 1 - VIDA: {vida_player1}", COLOR_WHITE, (30, 30))
 
             # Mostra a vida do Player2, se existir
             player2 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player2'), None)
             if player2:
                 vida_player2 = player2.health
-                self.level_text(20, f"VIDA: {vida_player2}", COLOR_WHITE, (self.window.get_width() - 400, 10))
+                self.level_text(20, f"PLAYER 2 - VIDA: {vida_player2}", COLOR_WHITE, (30, 50))
 
             pygame.display.flip()
 
             #Só verifica colisões e saúde quando não está pausado
             if not self.paused:
-                EntityMediator.verify_collision(entity_list=self.entity_list)
+                # Verifica colisões e recebe o número de inimigos destruídos por tiros
+                enemies_destroyed_by_shots = EntityMediator.verify_collision(entity_list=self.entity_list)
                 EntityMediator.verify_health(entity_list=self.entity_list)
+
+                # Incrementa o score apenas com inimigos destruídos por tiros
+                self.score += enemies_destroyed_by_shots
 
             # Verifica se algum jogador morreu para exibir Game Over
             jogadores = [e for e in self.entity_list if isinstance(e, Player)]  # Lista de jogadores

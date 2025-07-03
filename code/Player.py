@@ -13,7 +13,6 @@ class Player(Entity):
             pygame.image.load(f"./asset/{name}_boost.png").convert_alpha()
         ]
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]  # Tempo de espera entre os tiros
-
         # Configuração da animação
         self.frame_index = 0
         self.animation_timer = 0
