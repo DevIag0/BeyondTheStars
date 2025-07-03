@@ -6,7 +6,7 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED, COUNTDOWN_TIME
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
@@ -28,6 +28,10 @@ class Level:
         pygame.time.set_timer(EVENT_METEOR, 5000)  # define um evento para gerar meteoros a cada 5 segundos
         self.score_player1 = 0  # Score separado para Player 1
         self.score_player2 = 0  # Score separado para Player 2
+
+
+        # Relógio de contagem regressiva
+        self.start_time = pygame.time.get_ticks()  # Tempo inicial em milissegundos
 
     def pause_menu(self):
         overlay = pygame.Surface(self.window.get_size())
@@ -83,7 +87,6 @@ class Level:
                 self.pause_menu()
 
             # imprimir o texto do nível
-            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_RED, (30, 10))
             self.level_text(20, f"{self.name}", COLOR_RED, (self.window.get_width() // 2 - 20, 10))
             self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_RED, (self.window.get_width() - 180, 10))
             self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_RED, (self.window.get_width() - 300, 10))
@@ -98,6 +101,22 @@ class Level:
             if player2:
                 vida_player2 = player2.health
                 self.level_text(20, f"PLAYER 2 - VIDA: {vida_player2} - SCORE: {self.score_player2}", COLOR_RED, (30, 50))
+
+            # Cálculo e exibição do tempo restante
+            if not self.paused:
+                # Calcula o tempo decorrido
+                elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000  # em segundos
+                # Calcula o tempo restante
+                remaining_time = COUNTDOWN_TIME - elapsed_time
+
+                if remaining_time <= 0:
+                    remaining_time = 0
+                    # Quando o tempo acaba, chama game over com motivo "timeout"
+                    self.game_over(reason="timeout")
+                    return "menu"
+
+                # Exibe o tempo restante
+                self.level_text(20, f"Tempo Restante: {remaining_time} seg", COLOR_RED, (30, 10))
 
             pygame.display.flip()
 
@@ -149,14 +168,51 @@ class Level:
         text_rect: Rect = text_surf.get_rect(left=text_center_pos[0], top=text_center_pos[1])
         self.window.blit(source=text_surf, dest=text_rect)
 
-    def game_over(self):
+    def game_over(self, reason="death"):
         overlay = pygame.Surface(self.window.get_size())
         overlay.set_alpha(180)
         overlay.fill((0, 0, 0))
         self.window.blit(overlay, (0, 0))
         font = pygame.font.SysFont(None, 100)
-        text = font.render("GAME OVER", True, COLOR_ORANGE)
-        text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
-        self.window.blit(text, text_rect)
+
+        if reason == "timeout":
+            text = font.render("TEMPO ACABOU!", True, COLOR_ORANGE)
+            text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 - 80))
+            self.window.blit(text, text_rect)
+
+            # Verifica se é modo cooperativo (2 players)
+            if self.game_mode == MENU_OPTION[1]:  # "NEW GAME 2P - COOPERATIVE"
+                # Mostra pontuação individual de cada jogador
+                font_score = pygame.font.SysFont(None, 50)
+
+                # Player 1 Score
+                score_text1 = font_score.render(f"Player 1 Score: {self.score_player1}", True, COLOR_WHITE)
+                score_rect1 = score_text1.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 - 20))
+                self.window.blit(score_text1, score_rect1)
+
+                # Player 2 Score
+                score_text2 = font_score.render(f"Player 2 Score: {self.score_player2}", True, COLOR_WHITE)
+                score_rect2 = score_text2.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 + 20))
+                self.window.blit(score_text2, score_rect2)
+
+                # Score Total
+                total_score = self.score_player1 + self.score_player2
+                total_text = font_score.render(f"Score Total: {total_score}", True, COLOR_ORANGE)
+                total_rect = total_text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 + 60))
+                self.window.blit(total_text, total_rect)
+
+            # Modo single player - mostra apenas o score do Player 1
+            if self.game_mode != MENU_OPTION[1]:
+                font_score = pygame.font.SysFont(None, 60)
+                score_text = font_score.render(f"Sua pontuação foi: {self.score_player1}", True, COLOR_WHITE)
+                score_rect = score_text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2 + 20))
+                self.window.blit(score_text, score_rect)
+        else:
+            # Game over por morte
+            text = font.render("GAME OVER", True, COLOR_ORANGE)
+            text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
+            self.window.blit(text, text_rect)
+
+
         pygame.display.flip()
         pygame.time.wait(3000)

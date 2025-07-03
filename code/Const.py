@@ -5,6 +5,7 @@ import pygame
 COLOR_ORANGE = (255, 255, 255)
 COLOR_WHITE = (0, 139, 139)
 COLOR_RED = (255, 0, 0)
+COUNTDOWN_TIME = 60  # Tempo de contagem regressiva em segundos
 
 # Controles do jogo
 CONTROLS_P1 = [
