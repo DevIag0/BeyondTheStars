@@ -7,7 +7,7 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, COLOR_RED
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
@@ -82,24 +82,23 @@ class Level:
                 self.pause_menu()
 
             # imprimir o texto do nível
-            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_WHITE, (30, 10))
-            #self.level_text(20, f"{self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
-            self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 180, 10))
+            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_RED, (30, 10))
+            self.level_text(20, f"{self.name}", COLOR_RED, (self.window.get_width() // 2 - 20, 10))
+            self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_RED, (self.window.get_width() - 180, 10))
             self.level_text(20, f"SCORE: {self.score}", COLOR_ORANGE, (self.window.get_width() - 100, 10))
-            self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_WHITE,
-                            (self.window.get_width() - 300, 10))
+            self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_RED, (self.window.get_width() - 300, 10))
             # Mostra a pontuação do jogador
 
             # Mostra a vida do player atual (Player1)
             player1 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player1'), None)
             vida_player1 = player1.health if player1 else 0
-            self.level_text(20, f"PLAYER 1 - VIDA: {vida_player1}", COLOR_WHITE, (30, 30))
+            self.level_text(20, f"PLAYER 1 - VIDA: {vida_player1}", COLOR_RED, (30, 30))
 
             # Mostra a vida do Player2, se existir
             player2 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player2'), None)
             if player2:
                 vida_player2 = player2.health
-                self.level_text(20, f"PLAYER 2 - VIDA: {vida_player2}", COLOR_WHITE, (30, 50))
+                self.level_text(20, f"PLAYER 2 - VIDA: {vida_player2}", COLOR_RED, (30, 50))
 
             pygame.display.flip()
 
@@ -151,7 +150,7 @@ class Level:
         overlay.fill((0, 0, 0))
         self.window.blit(overlay, (0, 0))
         font = pygame.font.SysFont(None, 100)
-        text = font.render("GAME OVER", True, (255, 0, 0))
+        text = font.render("GAME OVER", True, COLOR_ORANGE)
         text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
         self.window.blit(text, text_rect)
         pygame.display.flip()

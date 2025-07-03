@@ -7,11 +7,19 @@ from code.PlayerShot import PlayerShot
 class Player(Entity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
-        self.frames = [
+        if self.name == 'Player1':
+            self.frames = [
             pygame.image.load(f"./asset/{name}.png").convert_alpha(),
             pygame.image.load(f"./asset/{name}_slow.png").convert_alpha(),
             pygame.image.load(f"./asset/{name}_boost.png").convert_alpha()
         ]
+        if self.name == 'Player2':
+            self.frames = [
+            pygame.image.load(f"./asset/{name}.png").convert_alpha(),
+            pygame.image.load(f"./asset/{name}_slow.png").convert_alpha(),
+            pygame.image.load(f"./asset/{name}_boost.png").convert_alpha()
+        ]
+
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]  # Tempo de espera entre os tiros
         # Configuração da animação
         self.frame_index = 0

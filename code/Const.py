@@ -2,8 +2,9 @@ import pygame
 
 # Constantes Game
 # C
-COLOR_ORANGE = (139, 69, 19)
-COLOR_WHITE = (255, 255, 255)
+COLOR_ORANGE = (255, 255, 255)
+COLOR_WHITE = (0, 139, 139)
+COLOR_RED = (255, 0, 0)
 
 # Controles do jogo
 CONTROLS_P1 = [
