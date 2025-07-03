@@ -1,5 +1,5 @@
 from code.EnemyShot import EnemyShot
-from code.Const import ALTURA_JANELA, PLAYER_KEY_SHOOT
+from code.Const import ALTURA_JANELA, PLAYER_SHOOT_DAMAGE
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.Player import Player
@@ -39,14 +39,14 @@ class EntityMediator:
         for tiro in tiros_player:
             for inimigo in inimigos:
                 if tiro.rect.colliderect(inimigo.rect):
-                    inimigo.health -= 50
+                    inimigo.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
 
         # Tiros do inimigo atingem jogadores
         for tiro in tiros_inimigo:
             for jogador in jogadores:
                 if tiro.rect.colliderect(jogador.rect):
-                    jogador.health -= 50
+                    jogador.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
 
         # Verifica se entidades saíram da tela
@@ -54,8 +54,9 @@ class EntityMediator:
             EntityMediator.__verify_collision_window(ent)
 
     @staticmethod
-    def verify_health(entity_list: list[Entity]):   # Verifica a saúde das entidades
+    def verify_health(entity_list: list[Entity]):  # Verifica a saúde das entidades
         for ent in entity_list[:]:
             # Só remove se não for Player
             if ent.health <= 0 and not isinstance(ent, Player):
                 entity_list.remove(ent)
+

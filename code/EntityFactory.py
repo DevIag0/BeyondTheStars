@@ -29,3 +29,4 @@ class EntityFactory:
 
             case "Enemy2":
                 return Enemy('Enemy2', position=(random.randint(30, LARGURA_JANELA - 30), -100))
+        return None

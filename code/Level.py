@@ -75,29 +75,37 @@ class Level:
                         if shoot is not None:
                             self.entity_list.append(shoot)
 
-
-
-
             # Se o jogo estiver pausado, desenha o menu de pausa
             if self.paused:
                 self.pause_menu()
 
             # imprimir o texto do nível
-            self.level_text(20, f"Sobreviva: {self.timeout // 1000} segundos", COLOR_WHITE, (50, 10))
-            self.level_text(20, f"{self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
-            self.level_text(20, f"Fps: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 100, 10))
-            self.level_text(20, f"Inimigos: {len(self.entity_list) - 9}", COLOR_WHITE,
+            self.level_text(20, f"SOBREVIVA: {self.timeout // 1000} segundos", COLOR_WHITE, (50, 10))
+            #self.level_text(20, f"{self.name}", COLOR_WHITE, (self.window.get_width() // 2 - 20, 10))
+            self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_WHITE, (self.window.get_width() - 100, 10))
+            self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_WHITE,
                             (self.window.get_width() - 200, 10))
+
+            # Mostra a vida do player atual (Player1)
+            player1 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player1'), None)
+            vida_player1 = player1.health if player1 else 0
+            self.level_text(20, f"VIDA: {vida_player1}", COLOR_WHITE, (self.window.get_width() - 300, 10))
+
+            # Mostra a vida do Player2, se existir
+            player2 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player2'), None)
+            if player2:
+                vida_player2 = player2.health
+                self.level_text(20, f"VIDA: {vida_player2}", COLOR_WHITE, (self.window.get_width() - 400, 10))
 
             pygame.display.flip()
 
-            # IMPORTANTE: Só verifica colisões e saúde quando não está pausado
+            #Só verifica colisões e saúde quando não está pausado
             if not self.paused:
                 EntityMediator.verify_collision(entity_list=self.entity_list)
                 EntityMediator.verify_health(entity_list=self.entity_list)
 
             # Verifica se algum jogador morreu para exibir Game Over
-            jogadores = [e for e in self.entity_list if isinstance(e, Player)] # Lista de jogadores
+            jogadores = [e for e in self.entity_list if isinstance(e, Player)]  # Lista de jogadores
             if any(jogador.health <= 0 for jogador in jogadores):
                 self.game_over()
                 return "menu"
@@ -115,7 +123,7 @@ class Level:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar
                         self.pause_musica()
-                    elif event.key == pygame.K_ESCAPE: # Tecla ESC para sair do nível
+                    elif event.key == pygame.K_ESCAPE:  # Tecla ESC para sair do nível
                         if self.paused:
                             # Se estiver pausado, ESC sai do nível
                             return "menu"

@@ -35,15 +35,18 @@ ENTITY_VIDA = {
     'Level1bg2': 9999,
     'Level1bg3': 9999,
     'Level1bg4': 9999,
-    'Player1': 300,
+    'Player1': 200,
     'Player1Shot':1,
-    'Player2': 300,
+    'Player2': 200,
     'Player2Shot':1,
     'Enemy1': 100,
     'Enemy1Shot': 1,
-    'Enemy2': 50,
+    'Enemy2': 100,
     'Enemy2Shot': 1,
 }
+
+
+
 
 EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
@@ -77,6 +80,9 @@ PLAYER_KEY_RIGHT = {'Player1': pygame.K_RIGHT,
 PLAYER_KEY_SHOOT = {'Player1': pygame.K_SPACE,
                     'Player2': pygame.K_g}
 
+PLAYER_SHOOT_DAMAGE ={
+    'Player': 50,
+}
 # s
 SPAWN_TIME = 1000
 
