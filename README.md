@@ -1,8 +1,9 @@
 # 🚀 Beyond the Stars - Space Shooter Game
 
+**(Ainda em desenvolvimento)**
+
 ## 📋 Sobre o Projeto
 
-(Ainda em desenvolvimento)
 Este é um projeto acadêmico desenvolvido para a disciplina de **Linguagem de Programação** da faculdade. O jogo "Beyond the Stars" é um space shooter clássico desenvolvido em Python utilizando a biblioteca Pygame, implementando diversos padrões de projeto e conceitos de programação orientada a objetos.
 
 ## 🎮 Características do Jogo
