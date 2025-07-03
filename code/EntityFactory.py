@@ -25,8 +25,8 @@ class EntityFactory:
                 return Player('Player2', position=(LARGURA_JANELA // 2 + 30, ALTURA_JANELA - 100))
 
             case "Enemy1":
-                return Enemy('Enemy1', position=(random.randint(30, LARGURA_JANELA - 30), -100))
+                return Enemy('Enemy1', position=(random.randint(50, LARGURA_JANELA - 50), -100))
 
             case "Enemy2":
-                return Enemy('Enemy2', position=(random.randint(30, LARGURA_JANELA - 30), -100))
+                return Enemy('Enemy2', position=(random.randint(50, LARGURA_JANELA - 50), -100))
         return None
