@@ -6,6 +6,7 @@ COLOR_ORANGE = (255, 255, 255)
 COLOR_WHITE = (0, 139, 139)
 COLOR_RED = (255, 0, 0)
 COUNTDOWN_TIME = 60  # Tempo de contagem regressiva em segundos
+COUNTDOWN_OPTIONS = (60, 120, -1)  # -1 representa ilimitado
 
 # Controles do jogo
 CONTROLS_P1 = [
@@ -102,6 +103,7 @@ MENU_OPTION = ("NEW GAME 1P",
 OPTIONS_GAME = ("VOLUME",
                 "CONTROLES",
                 "TAXA DE QUADROS",
+                "TEMPO DE JOGO",
                 "RETORNAR")
 
 # P

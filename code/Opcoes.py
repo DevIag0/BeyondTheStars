@@ -1,16 +1,17 @@
 import sys
 
 import pygame
-from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE, FPS_GAME, CONTROLS_P1, CONTROLS_P2, GENERAL_CONTROLS, MENU_FPS
+from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE, FPS_GAME, CONTROLS_P1, CONTROLS_P2, GENERAL_CONTROLS, MENU_FPS, COUNTDOWN_OPTIONS
 from code.Menu import Menu
 from code.Background import Background
 
 
 class Opcoes(Menu):
-    def __init__(self, window, volume=0.5, fps_index=1):
+    def __init__(self, window, volume=0.5, fps_index=1, countdown_index=0):
         super().__init__(window, volume)
         self.volume = volume
         self.fps_index = fps_index  # 0 = 60 FPS, 1 = 90 FPS - Padrão: 90 FPS
+        self.countdown_index = countdown_index  # 0 = 60s, 1 = 120s, 2 = ilimitado
         self.selected_option = 0
         self.clock = pygame.time.Clock()
 
@@ -100,13 +101,22 @@ class Opcoes(Menu):
             if self.selected_option == 0:
                 font = pygame.font.SysFont(None, 40)
                 text = font.render(f"Volume: {self.volume:.1f}", True, COLOR_WHITE)
-                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 520))
+                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 570))
 
             # Exibe o FPS se a opção selecionada para taxa de quadros estiver ativa
             if self.selected_option == 2:
                 font = pygame.font.SysFont(None, 40)
                 text = font.render(f"FPS: {FPS_GAME[self.fps_index]}", True, COLOR_WHITE)
-                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 520))
+                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 570))
+
+            # Exibe o TEMPO DE JOGO se a opção selecionada estiver ativa
+            if self.selected_option == 3:
+                font = pygame.font.SysFont(None, 40)
+                if COUNTDOWN_OPTIONS[self.countdown_index] == -1:
+                    text = font.render("Tempo: Ilimitado", True, COLOR_WHITE)
+                else:
+                    text = font.render(f"Tempo: {COUNTDOWN_OPTIONS[self.countdown_index]}s", True, COLOR_WHITE)
+                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 570))
 
             pygame.display.flip()
             self.clock.tick(MENU_FPS)  # Limitar FPS do menu a 30
@@ -117,7 +127,7 @@ class Opcoes(Menu):
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        return self.volume, self.fps_index  # retorna o volume e fps ao apertar ESC
+                        return self.volume, self.fps_index, self.countdown_index  # retorna volume, fps e countdown ao apertar ESC
                     if event.key == pygame.K_DOWN:
                         self.selected_option = (self.selected_option + 1) % len(OPTIONS_GAME)
                     if event.key == pygame.K_UP:
@@ -138,6 +148,11 @@ class Opcoes(Menu):
                             self.fps_index = (self.fps_index + 1) % len(FPS_GAME)
                         if event.key == pygame.K_LEFT:
                             self.fps_index = (self.fps_index - 1) % len(FPS_GAME)
-                    if self.selected_option == 3:  # Se a opção selecionada for "Voltar"
+                    if self.selected_option == 3:  # Se TEMPO DE JOGO estiver selecionado
+                        if event.key == pygame.K_RIGHT:
+                            self.countdown_index = (self.countdown_index + 1) % len(COUNTDOWN_OPTIONS)
+                        if event.key == pygame.K_LEFT:
+                            self.countdown_index = (self.countdown_index - 1) % len(COUNTDOWN_OPTIONS)
+                    if self.selected_option == 4:  # Se a opção selecionada for "RETORNAR"
                         if event.key == pygame.K_RETURN:
-                            return self.volume, self.fps_index
+                            return self.volume, self.fps_index, self.countdown_index

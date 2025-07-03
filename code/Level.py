@@ -6,17 +6,19 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED, COUNTDOWN_TIME
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED, COUNTDOWN_TIME, COUNTDOWN_OPTIONS
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
 
 class Level:
-    def __init__(self, window, name, game_mode, fps_index=1):
+    def __init__(self, window, name, game_mode, fps_index=1, countdown_index=0):
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.fps_index = fps_index  # Índice do FPS selecionado (0 = 60 FPS, 1 = 90 FPS) - Padrão: 90 FPS
+        self.countdown_index = countdown_index  # Índice do tempo de jogo selecionado
+        self.countdown_time = COUNTDOWN_OPTIONS[countdown_index]  # Tempo de jogo baseado na configuração
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
         self.entity_list.append(EntityFactory.get_entity('Player1'))  # adiciona o jogador ao nível
@@ -104,19 +106,23 @@ class Level:
 
             # Cálculo e exibição do tempo restante
             if not self.paused:
-                # Calcula o tempo decorrido
-                elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000  # em segundos
-                # Calcula o tempo restante
-                remaining_time = COUNTDOWN_TIME - elapsed_time
+                # Se o tempo for ilimitado (-1), não mostra countdown
+                if self.countdown_time == -1:
+                    self.level_text(20, f"Tempo: Ilimitado", COLOR_RED, (30, 10))
+                else:
+                    # Calcula o tempo decorrido
+                    elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000  # em segundos
+                    # Calcula o tempo restante
+                    remaining_time = self.countdown_time - elapsed_time
 
-                if remaining_time <= 0:
-                    remaining_time = 0
-                    # Quando o tempo acaba, chama game over com motivo "timeout"
-                    self.game_over(reason="timeout")
-                    return "menu"
+                    if remaining_time <= 0:
+                        remaining_time = 0
+                        # Quando o tempo acaba, chama game over com motivo "timeout"
+                        self.game_over(reason="timeout")
+                        return "menu"
 
-                # Exibe o tempo restante
-                self.level_text(20, f"Tempo Restante: {remaining_time} seg", COLOR_RED, (30, 10))
+                    # Exibe o tempo restante
+                    self.level_text(20, f"Tempo Restante: {remaining_time} seg", COLOR_RED, (30, 10))
 
             pygame.display.flip()
 
