@@ -5,6 +5,31 @@ import pygame
 COLOR_ORANGE = (139, 0, 0)
 COLOR_WHITE = (255, 255, 255)
 
+# Controles do jogo
+CONTROLS_P1 = [
+    "↑ - Mover para cima",
+    "↓ - Mover para baixo",
+    "← - Mover para esquerda",
+    "→ - Mover para direita",
+    "ESPAÇO - Atirar"
+]
+
+CONTROLS_P2 = [
+    "W - Mover para cima",
+    "S - Mover para baixo",
+    "A - Mover para esquerda",
+    "D - Mover para direita",
+    "G - Atirar"
+]
+
+GENERAL_CONTROLS = [
+    "P - Pausar/Despausar jogo",
+    "ESC - Pausar jogo ou voltar ao menu",
+    "ENTER - Confirmar seleção",
+    "↑↓ - Navegar nos menus",
+    "←→ - Ajustar volume/FPS nas opções"
+]
+
 # E
 ENTITY_SPEED = {
     'Level1bg0': 1,
@@ -52,7 +77,7 @@ EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
 # F
 
-FPS_GAME = (30, 60, 90)
+FPS_GAME = (60, 90)
 
 # M
 MENU_OPTION = ("NEW GAME 1P",

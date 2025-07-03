@@ -17,7 +17,7 @@ class Level:
         self.window = window
         self.name = name
         self.game_mode = game_mode
-        self.fps_index = fps_index  # Índice do FPS selecionado
+        self.fps_index = fps_index  # Índice do FPS selecionado (0 = 60 FPS, 1 = 90 FPS) - Padrão: 90 FPS
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
         self.entity_list.append(EntityFactory.get_entity('Player1'))  # adiciona o jogador ao nível

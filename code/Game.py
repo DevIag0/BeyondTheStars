@@ -12,7 +12,7 @@ class Game:
         self.window = pygame.display.set_mode(size=(ALTURA_JANELA, LARGURA_JANELA))  # cria a janela do jogo
         pygame.display.set_caption("Beyond the Stars")  # define nome na janela
         self.volume = 0.2  # volume global
-        self.fps_index = 1  # FPS global (0 = 30 FPS, 1 = 60 FPS)
+        self.fps_index = 1  # FPS global (0 = 60 FPS, 1 = 90 FPS) - Padrão: 90 FPS
 
     def run(self):
         # loop principal do jogo
