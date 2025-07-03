@@ -1,6 +1,7 @@
 import sys
 import pygame
-from code.Const import COLOR_ORANGE, COLOR_WHITE, MENU_OPTION
+from code.Const import COLOR_ORANGE, COLOR_WHITE, MENU_OPTION, MENU_FPS
+from code.Background import Background
 from pygame.rect import Rect
 from pygame.surface import Surface
 
@@ -10,9 +11,23 @@ from pygame.surface import Surface
 class Menu:
     def __init__(self, window, volume=0.2):
         self.window = window
-        self.surf = pygame.image.load("./asset/Level1bg0.png").convert_alpha()
-        self.rect = self.surf.get_rect(left=0, top=0)  # definir a posição do menu
         self.volume = volume
+        self.clock = pygame.time.Clock()
+
+        # Criar múltiplas camadas de background para efeito parallax
+        self.backgrounds = []
+
+        # Camada de fundo
+        for i in range(2):
+            bg = Background('Level2bg0', (0, -i * 800))
+            self.backgrounds.append(bg)
+
+        # Camadas intermediárias - velocidades crescentes
+        bg_layers = ['Level1bg1', 'Level1bg2', 'Level1bg3']
+        for layer in bg_layers:
+            for i in range(2):
+                bg = Background(layer, (0, -i * 800))
+                self.backgrounds.append(bg)
 
     def run(self,):
         menu_option: int = 0  # variável para armazenar a opção do menu selecionada
@@ -21,7 +36,11 @@ class Menu:
         pygame.mixer.music.set_volume(self.volume)
 
         while True:
-            self.window.blit(source=self.surf, dest=self.rect)  # desenha o fundo do menu
+            # Atualizar e desenhar backgrounds
+            # Desenhar na ordem correta (fundo para frente)
+            for bg in self.backgrounds:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
 
             self.menu_text(text_size=60, text="BEYOND", text_color=COLOR_WHITE,
                            text_center_pos=(self.window.get_width() // 2, 200))
@@ -29,7 +48,6 @@ class Menu:
                            text_center_pos=(self.window.get_width() // 2, 260))
 
             for option in range(len(MENU_OPTION)):
-
                 #  se a opção do menu for a opção selecionada, desenhar com cor branca, caso contrário, desenhar com cor laranja
                 if option == menu_option:
                     self.menu_text(text_size=40, text=MENU_OPTION[option], text_color=COLOR_WHITE,
@@ -39,6 +57,7 @@ class Menu:
                                    text_center_pos=(self.window.get_width() // 2, 350 + option * 50))
 
             pygame.display.flip()  # atualizar a tela
+            self.clock.tick(MENU_FPS)  # Limitar FPS do menu a 30
 
             # checar eventos
             for event in pygame.event.get():

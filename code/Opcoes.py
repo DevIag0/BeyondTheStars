@@ -1,8 +1,9 @@
 import sys
 
 import pygame
-from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE, FPS_GAME, CONTROLS_P1, CONTROLS_P2, GENERAL_CONTROLS
+from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE, FPS_GAME, CONTROLS_P1, CONTROLS_P2, GENERAL_CONTROLS, MENU_FPS
 from code.Menu import Menu
+from code.Background import Background
 
 
 class Opcoes(Menu):
@@ -11,52 +12,81 @@ class Opcoes(Menu):
         self.volume = volume
         self.fps_index = fps_index  # 0 = 60 FPS, 1 = 90 FPS - Padrão: 90 FPS
         self.selected_option = 0
-        # Carregar a imagem de fundo para o menu de opções
-        self.surf = pygame.image.load("./asset/Level1bg0.png").convert()
-        self.rect = self.surf.get_rect(left=0, top=0)
+        self.clock = pygame.time.Clock()
+
+        # Criar múltiplas camadas de background para efeito parallax
+        self.backgrounds = []
+
+        # Camada de fundo (Level2bg0)
+        for i in range(2):
+            bg = Background('Level2bg0', (0, -i * 800))
+            self.backgrounds.append(bg)
+
+        # Camadas intermediárias (Level1bg1, Level1bg2, Level1bg3) - velocidades crescentes
+        bg_layers = ['Level1bg1', 'Level1bg2', 'Level1bg3']
+        for layer in bg_layers:
+            for i in range(2):
+                bg = Background(layer, (0, -i * 800))
+                self.backgrounds.append(bg)
 
     def show_controls(self):
         """Exibe a listagem de todos os comandos do jogo"""
-        # Limpar a tela
-        self.window.blit(source=self.surf, dest=self.rect)
+        while True:
+            # Atualizar e desenhar backgrounds com efeito parallax
+            for bg in self.backgrounds:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
 
-        # Título
-        self.menu_text(text_size=50, text="CONTROLES DO JOGO", text_color=COLOR_WHITE,
-                       text_center_pos=(self.window.get_width() // 2, 80))
+            # Título
+            self.menu_text(text_size=50, text="CONTROLES DO JOGO", text_color=COLOR_WHITE,
+                           text_center_pos=(self.window.get_width() // 2, 80))
 
-        # Controles Player 1
-        self.menu_text(text_size=35, text="PLAYER 1:", text_color=COLOR_ORANGE,
-                       text_center_pos=(200, 150))
+            # Controles Player 1
+            self.menu_text(text_size=35, text="PLAYER 1:", text_color=COLOR_ORANGE,
+                           text_center_pos=(200, 150))
 
-        for i, control in enumerate(CONTROLS_P1):
-            self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
-                           text_center_pos=(200, 190 + i * 30))
+            for i, control in enumerate(CONTROLS_P1):
+                self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
+                               text_center_pos=(200, 190 + i * 30))
 
-        # Controles Player 2
-        self.menu_text(text_size=35, text="PLAYER 2:", text_color=COLOR_ORANGE,
-                       text_center_pos=(600, 150))
+            # Controles Player 2
+            self.menu_text(text_size=35, text="PLAYER 2:", text_color=COLOR_ORANGE,
+                           text_center_pos=(600, 150))
 
-        for i, control in enumerate(CONTROLS_P2):
-            self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
-                           text_center_pos=(600, 190 + i * 30))
+            for i, control in enumerate(CONTROLS_P2):
+                self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
+                               text_center_pos=(600, 190 + i * 30))
 
-        # Controles Gerais
-        self.menu_text(text_size=35, text="CONTROLES GERAIS:", text_color=COLOR_ORANGE,
-                       text_center_pos=(self.window.get_width() // 2, 380))
+            # Controles Gerais
+            self.menu_text(text_size=35, text="CONTROLES GERAIS:", text_color=COLOR_ORANGE,
+                           text_center_pos=(self.window.get_width() // 2, 380))
 
-        for i, control in enumerate(GENERAL_CONTROLS):
-            self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
-                           text_center_pos=(self.window.get_width() // 2, 420 + i * 30))
+            for i, control in enumerate(GENERAL_CONTROLS):
+                self.menu_text(text_size=25, text=control, text_color=COLOR_WHITE,
+                               text_center_pos=(self.window.get_width() // 2, 420 + i * 30))
 
-        # Instruções
-        self.menu_text(text_size=30, text="Pressione qualquer tecla para voltar", text_color=COLOR_ORANGE,
-                       text_center_pos=(self.window.get_width() // 2, 650))
+            # Instruções
+            self.menu_text(text_size=30, text="Pressione qualquer tecla para voltar", text_color=COLOR_ORANGE,
+                           text_center_pos=(self.window.get_width() // 2, 650))
 
-        pygame.display.flip()
+            pygame.display.flip()
+            self.clock.tick(MENU_FPS)  # Limitar FPS do menu a 30
+
+            # Aguardar tecla para voltar
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    return
 
     def run(self):
         while True:
-            self.window.blit(source=self.surf, dest=self.rect)
+            # Atualizar e desenhar backgrounds com efeito parallax
+            for bg in self.backgrounds:
+                bg.move()
+                self.window.blit(bg.surf, bg.rect)
+
             self.menu_text(text_size=60, text="OPÇÕES", text_color=COLOR_WHITE,
                            text_center_pos=(self.window.get_width() // 2, 260))
 
@@ -79,6 +109,7 @@ class Opcoes(Menu):
                 self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 520))
 
             pygame.display.flip()
+            self.clock.tick(MENU_FPS)  # Limitar FPS do menu a 30
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -102,16 +133,6 @@ class Opcoes(Menu):
                         if event.key == pygame.K_RETURN:
                             # Mostrar tela de controles
                             self.show_controls()
-                            # Aguardar tecla para voltar
-                            waiting = True
-                            while waiting:
-                                for control_event in pygame.event.get():
-                                    if control_event.type == pygame.QUIT:
-                                        pygame.quit()
-                                        sys.exit()
-                                    if control_event.type == pygame.KEYDOWN:
-                                        waiting = False
-                                        break
                     if self.selected_option == 2:  # Se FPS estiver selecionado
                         if event.key == pygame.K_RIGHT:
                             self.fps_index = (self.fps_index + 1) % len(FPS_GAME)

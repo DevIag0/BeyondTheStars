@@ -2,7 +2,7 @@ import pygame
 
 # Constantes Game
 # C
-COLOR_ORANGE = (139, 0, 0)
+COLOR_ORANGE = (139, 69, 19)
 COLOR_WHITE = (255, 255, 255)
 
 # Controles do jogo
@@ -37,6 +37,7 @@ ENTITY_SPEED = {
     'Level1bg2': 3,
     'Level1bg3': 4,
     'Level1bg4': 5,
+    'Level2bg0': 1,  # Velocidade do background do menu
     'Player1': 5,
     'Player1Shot': 8,
     'Player2': 5,
@@ -60,6 +61,7 @@ ENTITY_VIDA = {
     'Level1bg2': 9999,
     'Level1bg3': 9999,
     'Level1bg4': 9999,
+    'Level2bg0': 9999,  # Vida do background do menu
     'Player1': 200,
     'Player1Shot':1,
     'Player2': 200,
@@ -77,7 +79,8 @@ EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
 # F
 
-FPS_GAME = (60, 90)
+FPS_GAME = (60, 90)  # 90 FPS como padrão (índice 1)
+MENU_FPS = 30  # FPS específico para o menu
 
 # M
 MENU_OPTION = ("NEW GAME 1P",
