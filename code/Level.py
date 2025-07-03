@@ -130,7 +130,8 @@ class Level:
 
                 # Só gera meteoros quando não está pausado
                 if event.type == EVENT_METEOR and not self.paused:  # Evento para gerar meteoros
-                    self.entity_list.append(EntityFactory.get_entity('Meteor'))  # Spawna um meteoro
+                    meteor_choice = random.choice(('Meteor', 'Meteor2'))  # Escolhe um meteoro aleatório
+                    self.entity_list.append(EntityFactory.get_entity(meteor_choice))  # Spawna um meteoro
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar

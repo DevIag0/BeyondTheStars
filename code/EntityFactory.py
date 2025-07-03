@@ -34,4 +34,7 @@ class EntityFactory:
             case "Meteor":
                 return Meteor('Meteor', position=(random.randint(50, LARGURA_JANELA - 50), -100))
 
+            case "Meteor2":
+                return Meteor('Meteor2', position=(random.randint(50, LARGURA_JANELA - 50), -100))
+
         return None

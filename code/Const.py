@@ -48,6 +48,7 @@ ENTITY_SPEED = {
     'Enemy2': 2,
     'Enemy2Shot': 4,
     'Meteor': 4,  # Velocidade do meteoro
+    'Meteor2': 3,  # Velocidade do segundo meteoro (um pouco mais lento)
 }
 
 ENTITY_SHOT_DELAY = {
@@ -74,6 +75,7 @@ ENTITY_VIDA = {
     'Enemy2': 100,
     'Enemy2Shot': 1,
     'Meteor': 150,  # Vida do meteoro
+    'Meteor2': 200,  # Vida do segundo meteoro (mais resistente)
 }
 
 

@@ -5,13 +5,18 @@ from code.Entity import Entity
 
 class Meteor(Entity):
     def __init__(self, name: str, position: tuple):
-        # Inicializar Entity sem carregar imagem automaticamente
+        # Não chamar super().__init__ porque precisamos carregar sprite personalizado
         self.name = name
         self.rect = pygame.Rect(position[0], position[1], 0, 0)
         self.health = ENTITY_VIDA[self.name]  # Inicializar a saúde do meteoro
+        self.speed = 0  # Inicializar velocidade
 
-        # Carregar a imagem específica do meteoro (Meteor1.png)
-        self.surf = pygame.image.load("./asset/Meteor1.png").convert_alpha()
+        # Carregar a imagem específica do meteoro baseada no nome
+        if self.name == 'Meteor2':
+            self.surf = pygame.image.load("./asset/Meteor2.png").convert_alpha()
+        else:  # Meteor1 ou 'Meteor'
+            self.surf = pygame.image.load("./asset/Meteor1.png").convert_alpha()
+
         self.rect = self.surf.get_rect(center=position)
 
         # Configuração de rotação para dar efeito visual
