@@ -4,6 +4,7 @@ from code.Enemy import Enemy
 from code.Entity import Entity
 from code.Player import Player
 from code.PlayerShot import PlayerShot
+from code.Meteor import Meteor
 
 
 class EntityMediator:
@@ -11,9 +12,9 @@ class EntityMediator:
 
     @staticmethod
     def __verify_collision_window(ent: Entity):  # Verifica se as entidades estão dentro dos limites da janela
-        if isinstance(ent, Enemy):
-            if ent.rect.top >= ALTURA_JANELA + 100:  # Se o inimigo sair da janela, ele é destruído
-                ent.health = 0  # Se o inimigo sair da janela, ele é destruído
+        if isinstance(ent, (Enemy, Meteor)):  # Meteoros também são removidos quando saem da tela
+            if ent.rect.top >= ALTURA_JANELA + 100:  # Se o inimigo/meteoro sair da janela, ele é destruído
+                ent.health = 0  # Se o inimigo/meteoro sair da janela, ele é destruído
         if isinstance(ent, PlayerShot):
             if ent.rect.top < 0:  # Se o tiro sair da janela, ele é destruído
                 ent.health = 0
@@ -29,6 +30,7 @@ class EntityMediator:
         tiros_player = [e for e in entity_list if isinstance(e, PlayerShot)]
         tiros_inimigo = [e for e in entity_list if isinstance(e, EnemyShot)]
         inimigos = [e for e in entity_list if isinstance(e, Enemy)]
+        meteoros = [e for e in entity_list if isinstance(e, Meteor)]  # Adicionar lista de meteoros
         jogadores = [e for e in entity_list if isinstance(e, Player)]
 
         # Tiros do player e do inimigo se anulam se colidirem
@@ -48,12 +50,36 @@ class EntityMediator:
                     if inimigo.health <= 0:
                         enemies_destroyed_by_shots += 1
 
+        # Tiros do player atingem meteoros
+        for tiro in tiros_player:
+            for meteoro in meteoros:
+                if tiro.rect.colliderect(meteoro.rect):
+                    meteoro.health -= PLAYER_SHOOT_DAMAGE['Player']
+                    tiro.health = 0
+                    # Se o meteoro morreu com esse tiro, conta para o score
+                    if meteoro.health <= 0:
+                        enemies_destroyed_by_shots += 1
+
         # Tiros do inimigo atingem jogadores
         for tiro in tiros_inimigo:
             for jogador in jogadores:
                 if tiro.rect.colliderect(jogador.rect):
                     jogador.health -= PLAYER_SHOOT_DAMAGE['Player']
                     tiro.health = 0
+
+        # Meteoros colidem com jogadores
+        for meteoro in meteoros:
+            for jogador in jogadores:
+                if meteoro.rect.colliderect(jogador.rect):
+                    jogador.health -= 75  # Meteoro causa dano ao jogador
+                    meteoro.health = 0  # Meteoro é destruído na colisão
+
+        # Meteoros colidem com inimigos (meteoros destroem inimigos)
+        for meteoro in meteoros:
+            for inimigo in inimigos:
+                if meteoro.rect.colliderect(inimigo.rect):
+                    inimigo.health = 0  # Inimigo é destruído
+                    meteoro.health -= 50  # Meteoro perde vida mas pode continuar
 
         # Verifica se entidades saíram da tela
         for ent in entity_list:

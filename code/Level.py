@@ -3,13 +3,13 @@ import sys
 import pygame
 from pygame.rect import Rect
 from pygame.surface import Surface
-
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, COLOR_RED
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED
 from code.EntityMediator import EntityMediator
 from code.Player import Player
+from code.Meteor import Meteor
 
 
 class Level:
@@ -26,6 +26,7 @@ class Level:
         if game_mode in [MENU_OPTION[1]]:
             self.entity_list.append(EntityFactory.get_entity('Player2'))
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)  # define um evento para gerar inimigos a cada 2 segundos
+        pygame.time.set_timer(EVENT_METEOR, 5000)  # define um evento para gerar meteoros a cada 5 segundos
         self.score = 0  # Inicializa o score
 
     def pause_menu(self):
@@ -126,6 +127,10 @@ class Level:
                 if event.type == EVENT_ENEMY and not self.paused:  # Evento para gerar inimigos
                     choice = random.choice(('Enemy1', 'Enemy2'))  # Escolhe um inimigo aleatório
                     self.entity_list.append(EntityFactory.get_entity(choice))
+
+                # Só gera meteoros quando não está pausado
+                if event.type == EVENT_METEOR and not self.paused:  # Evento para gerar meteoros
+                    self.entity_list.append(EntityFactory.get_entity('Meteor'))  # Spawna um meteoro
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Tecla P para pausar/despausar

@@ -47,6 +47,7 @@ ENTITY_SPEED = {
     'Enemy1Shot': 5,
     'Enemy2': 2,
     'Enemy2Shot': 4,
+    'Meteor': 4,  # Velocidade do meteoro
 }
 
 ENTITY_SHOT_DELAY = {
@@ -54,6 +55,7 @@ ENTITY_SHOT_DELAY = {
     'Player2': 15,
     'Enemy1': 100,
     'Enemy2': 120,
+    # Meteor não tem shot delay pois não atira
 }
 
 ENTITY_VIDA = {
@@ -71,12 +73,14 @@ ENTITY_VIDA = {
     'Enemy1Shot': 1,
     'Enemy2': 100,
     'Enemy2Shot': 1,
+    'Meteor': 150,  # Vida do meteoro
 }
 
 
 
 
 EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
+EVENT_METEOR = pygame.USEREVENT + 2  # Evento personalizado para gerar meteoros
 
 # F
 
