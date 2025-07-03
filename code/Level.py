@@ -13,10 +13,11 @@ from code.Player import Player
 
 
 class Level:
-    def __init__(self, window, name, game_mode):
+    def __init__(self, window, name, game_mode, fps_index=1):
         self.window = window
         self.name = name
         self.game_mode = game_mode
+        self.fps_index = fps_index  # Índice do FPS selecionado
         self.entity_list: list[Entity] = []  # lista de entidades no nível
         self.entity_list.extend(EntityFactory.get_entity('Level1bg'))  # adiciona entidades ao nível
         self.entity_list.append(EntityFactory.get_entity('Player1'))  # adiciona o jogador ao nível
@@ -62,8 +63,8 @@ class Level:
         clock = pygame.time.Clock()  # para controlar a taxa de quadros
 
         while True:
-            # Limita a taxa de quadros
-            clock.tick(FPS_GAME[1])  # FPS do jogo
+            # Limita a taxa de quadros usando o FPS selecionado
+            clock.tick(FPS_GAME[self.fps_index])  # FPS do jogo baseado na seleção do usuário
 
             # Desenhar entidades
             for ent in self.entity_list:

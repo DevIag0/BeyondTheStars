@@ -12,6 +12,7 @@ class Game:
         self.window = pygame.display.set_mode(size=(ALTURA_JANELA, LARGURA_JANELA))  # cria a janela do jogo
         pygame.display.set_caption("Beyond the Stars")  # define nome na janela
         self.volume = 0.2  # volume global
+        self.fps_index = 1  # FPS global (0 = 30 FPS, 1 = 60 FPS)
 
     def run(self):
         # loop principal do jogo
@@ -23,7 +24,7 @@ class Game:
 
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1], MENU_OPTION[2]]:
                 print("Iniciar jogo 1P")
-                level = Level(self.window, "Level1", menu_return)
+                level = Level(self.window, "Level1", menu_return, self.fps_index)
                 level_return = level.run()
 
                 # retorna ao menu se o jogo for pausado ou finalizado
@@ -34,8 +35,8 @@ class Game:
                 print("Exibir pontuação")
 
             elif menu_return == MENU_OPTION[4]:   # se a opção selecionada for "OPÇÕES"
-                options_game = Opcoes(self.window, self.volume)
-                self.volume = options_game.run()  # atualiza o volume global
+                options_game = Opcoes(self.window, self.volume, self.fps_index)
+                self.volume, self.fps_index = options_game.run()  # atualiza o volume e FPS global
 
 
             elif menu_return == MENU_OPTION[5]:  # se a opção selecionada for "EXIT"

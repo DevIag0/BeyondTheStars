@@ -1,14 +1,15 @@
 import sys
 
 import pygame
-from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE
+from code.Const import COLOR_WHITE, OPTIONS_GAME, COLOR_ORANGE, FPS_GAME
 from code.Menu import Menu
 
 
 class Opcoes(Menu):
-    def __init__(self, window, volume=0.5):
+    def __init__(self, window, volume=0.5, fps_index=1):
         super().__init__(window, volume)
         self.volume = volume
+        self.fps_index = fps_index  # 0 = 30 FPS, 1 = 60 FPS
         self.selected_option = 0
         # Carregar a imagem de fundo para o menu de opções
         self.surf = pygame.image.load("./asset/Level1bg0.png").convert()
@@ -32,6 +33,12 @@ class Opcoes(Menu):
                 text = font.render(f"Volume: {self.volume:.1f}", True, COLOR_WHITE)
                 self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 520))
 
+            # Exibe o FPS se a opção selecionada para taxa de quadros estiver ativa
+            if self.selected_option == 2:
+                font = pygame.font.SysFont(None, 40)
+                text = font.render(f"FPS: {FPS_GAME[self.fps_index]}", True, COLOR_WHITE)
+                self.window.blit(text, (self.window.get_width() // 2 - text.get_width() // 2, 520))
+
             pygame.display.flip()
 
             for event in pygame.event.get():
@@ -40,7 +47,7 @@ class Opcoes(Menu):
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        return self.volume  # retorna o volume ao apertar ESC
+                        return self.volume, self.fps_index  # retorna o volume e fps ao apertar ESC
                     if event.key == pygame.K_DOWN:
                         self.selected_option = (self.selected_option + 1) % len(OPTIONS_GAME)
                     if event.key == pygame.K_UP:
@@ -52,9 +59,11 @@ class Opcoes(Menu):
                         if event.key == pygame.K_LEFT:
                             self.volume = max(self.volume - 0.1, 0.0)
                             pygame.mixer.music.set_volume(self.volume)
+                    if self.selected_option == 2:  # Se FPS estiver selecionado
+                        if event.key == pygame.K_RIGHT:
+                            self.fps_index = (self.fps_index + 1) % len(FPS_GAME)
+                        if event.key == pygame.K_LEFT:
+                            self.fps_index = (self.fps_index - 1) % len(FPS_GAME)
                     if self.selected_option == 3:  # Se a opção selecionada for "Voltar"
                         if event.key == pygame.K_RETURN:
-                            return self.volume
-
-
-
+                            return self.volume, self.fps_index

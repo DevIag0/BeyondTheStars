@@ -52,7 +52,7 @@ EVENT_ENEMY = pygame.USEREVENT + 1  # Evento personalizado para gerar inimigos
 
 # F
 
-FPS_GAME = (30, 60)
+FPS_GAME = (30, 60, 90)
 
 # M
 MENU_OPTION = ("NEW GAME 1P",
@@ -64,7 +64,7 @@ MENU_OPTION = ("NEW GAME 1P",
 
 # O
 OPTIONS_GAME = ("VOLUME",
-                "DIFICULDADE",
+                "CONTROLES",
                 "TAXA DE QUADROS",
                 "RETORNAR")
 
