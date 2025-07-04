@@ -33,9 +33,6 @@ SpaceShooter/
 ├── main.py                 # Ponto de entrada da aplicação
 ├── requirements.txt        # Dependências do projeto
 ├── asset/                  # Recursos gráficos e sonoros
-│   ├── sprites/           # Imagens dos personagens
-│   ├── backgrounds/       # Imagens de fundo
-│   └── sounds/           # Arquivos de áudio
 └── code/                  # Código fonte
     ├── Game.py           # Controlador principal
     ├── Entity.py         # Classe base abstrata
