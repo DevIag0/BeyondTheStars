@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 from code.Menu import Menu
 from code.Const import ALTURA_JANELA, LARGURA_JANELA, MENU_OPTION
@@ -23,8 +22,8 @@ class Game:
             menu = Menu(self.window, self.volume)  # Passa backgrounds para o Menu
             menu_return, self.volume = menu.run()  # recebe também o volume atualizado
 
-            if menu_return in [MENU_OPTION[0], MENU_OPTION[1], MENU_OPTION[2]]:
-                # se a opção selecionada for "NEW GAME 1P", "NEW GAME 2P - COOPERATIVE" ou "PLAYER VS PLAYER"
+            if menu_return in [MENU_OPTION[0], MENU_OPTION[1]]:
+                # se a opção selecionada for "NEW GAME 1P" ou "NEW GAME 2P - COOPERATIVE"
                 level = Level(self.window, "Level1", menu_return, self.fps_index, self.countdown_index)
                 level_return = level.run()
 
@@ -32,14 +31,13 @@ class Game:
                 if level_return == "menu":
                     continue
 
-            elif menu_return == MENU_OPTION[3]:  # se a opção selecionada for "SCORE"
+            elif menu_return == MENU_OPTION[2]:  # se a opção selecionada for "SCORE"
                 print("Exibir pontuação")
 
-            elif menu_return == MENU_OPTION[4]:   # se a opção selecionada for "OPÇÕES"
+            elif menu_return == MENU_OPTION[3]:   # se a opção selecionada for "OPÇÕES"
                 options_game = Opcoes(self.window, self.volume, self.fps_index, self.countdown_index)
                 self.volume, self.fps_index, self.countdown_index = options_game.run()  # atualiza volume, FPS e tempo global
 
-
-            elif menu_return == MENU_OPTION[5]:  # se a opção selecionada for "EXIT"
+            elif menu_return == MENU_OPTION[4]:  # se a opção selecionada for "EXIT"
                 pygame.quit()  # fechar o pygame
                 sys.exit()  # sair do programa

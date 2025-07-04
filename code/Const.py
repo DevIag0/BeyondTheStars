@@ -10,10 +10,10 @@ COUNTDOWN_OPTIONS = (60, 120, -1)  # -1 representa ilimitado
 
 # Controles do jogo
 CONTROLS_P1 = [
-    "↑ - Mover para cima",
-    "↓ - Mover para baixo",
-    "← - Mover para esquerda",
-    "→ - Mover para direita",
+    "^ - Mover para cima",
+    "v - Mover para baixo",
+    "< - Mover para esquerda",
+    "> - Mover para direita",
     "ESPAÇO - Atirar"
 ]
 
@@ -29,8 +29,8 @@ GENERAL_CONTROLS = [
     "P - Pausar/Despausar jogo",
     "ESC - Pausar jogo ou voltar ao menu",
     "ENTER - Confirmar seleção",
-    "↑↓ - Navegar nos menus",
-    "←→ - Ajustar volume/FPS nas opções"
+    "^v - Navegar nos menus",
+    "<> - Ajustar volume/FPS nas opções"
 ]
 
 # E
@@ -94,7 +94,6 @@ MENU_FPS = 30  # FPS específico para o menu
 # M
 MENU_OPTION = ("NEW GAME 1P",
                "NEW GAME 2P - COOPERATIVE",
-               "PLAYER VS PLAYER",
                "SCORE",
                "OPÇÕES",
                "EXIT")
