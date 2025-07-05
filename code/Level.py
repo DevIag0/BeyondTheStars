@@ -6,7 +6,7 @@ from pygame.surface import Surface
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
-from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED, COUNTDOWN_TIME, COUNTDOWN_OPTIONS
+from code.Const import COLOR_WHITE, COLOR_ORANGE, FPS_GAME, MENU_OPTION, EVENT_ENEMY, EVENT_METEOR, SPAWN_TIME, COLOR_RED, COUNTDOWN_OPTIONS
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 
@@ -117,10 +117,22 @@ class Level:
 
                     if remaining_time <= 0:
                         remaining_time = 0
-                        # Quando o tempo acaba, chama game over com motivo "timeout"
+                        # Quando o tempo acaba, capturar nomes dos jogadores ANTES do game over
+                        player_names = {}
+
+                        # Capturar nome do Player 1 se ele tem score > 0
+                        if self.score_player1 > 0:
+                            player_names['Player1'] = self.get_player_name(1)
+
+                        # Capturar nome do Player 2 se existe e tem score > 0
+                        if player2 and self.score_player2 > 0:
+                            player_names['Player2'] = self.get_player_name(2)
+
+                        # AGORA mostrar game over e retornar
                         self.game_over(reason="timeout")
                         final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
-                        return "game_over", final_scores
+                        final_names = player_names
+                        return "game_over", final_scores, final_names
 
                     # Exibe o tempo restante
                     self.level_text(20, f"Tempo Restante: {remaining_time} seg", COLOR_RED, (30, 10))
@@ -140,9 +152,21 @@ class Level:
             # Verifica se algum jogador morreu para exibir Game Over
             jogadores = [e for e in self.entity_list if isinstance(e, Player)]  # Lista de jogadores
             if any(jogador.health <= 0 for jogador in jogadores):
+                # Capturar nomes dos jogadores antes do game over por morte
+                player_names = {}
+
+                # Capturar nome do Player 1 se ele tem score > 0
+                if self.score_player1 > 0:
+                    player_names['Player1'] = self.get_player_name(1)
+
+                # Capturar nome do Player 2 se existe e tem score > 0
+                if player2 and self.score_player2 > 0:
+                    player_names['Player2'] = self.get_player_name(2)
+
                 self.game_over()
                 final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
-                return "game_over", final_scores
+                final_names = player_names
+                return "game_over", final_scores, final_names
 
             # Gerencia os eventos
             for event in pygame.event.get():
@@ -165,7 +189,7 @@ class Level:
                     elif event.key == pygame.K_ESCAPE:  # Tecla ESC para sair do nível
                         if self.paused:
                             # Se estiver pausado, ESC sai do nível
-                            return "menu", None
+                            return "menu", None, None
                         else:
                             # Se não estiver pausado, ESC pausa o jogo
                             self.pause_musica()
@@ -224,3 +248,84 @@ class Level:
 
         pygame.display.flip()
         pygame.time.wait(3000)
+
+    def get_player_name(self, player_number):
+        """Captura o nome do jogador via teclado (máximo 6 caracteres)"""
+        player_name = ""
+        clock = pygame.time.Clock()
+
+        while True:
+            # Atualizar e desenhar o fundo
+            for ent in self.entity_list:
+                if ent.name.startswith('Level1bg'):
+                    self.window.blit(source=ent.surf, dest=ent.rect)
+
+            # Overlay escuro
+            overlay = pygame.Surface(self.window.get_size())
+            overlay.set_alpha(200)
+            overlay.fill((0, 0, 0))
+            self.window.blit(overlay, (0, 0))
+
+            # Título
+            font_title = pygame.font.SysFont(None, 60)
+            title_text = font_title.render(f"DIGITE O NOME DO PLAYER {player_number}", True, COLOR_WHITE)
+            title_rect = title_text.get_rect(center=(self.window.get_width() // 2, 250))
+            self.window.blit(title_text, title_rect)
+
+            # Campo de texto com o nome atual
+            font_input = pygame.font.SysFont(None, 80)
+            input_text = font_input.render(player_name + "_", True, COLOR_ORANGE)
+            input_rect = input_text.get_rect(center=(self.window.get_width() // 2, 350))
+
+            # Desenhar caixa de texto
+            box_rect = pygame.Rect(input_rect.left - 20, input_rect.top - 10, max(200, input_rect.width + 40), input_rect.height + 20)
+            pygame.draw.rect(self.window, COLOR_WHITE, box_rect, 3)
+
+            self.window.blit(input_text, input_rect)
+
+            # Instruções
+            font_inst = pygame.font.SysFont(None, 30)
+            inst_text1 = font_inst.render("Digite seu nome (máximo 6 caracteres)", True, COLOR_WHITE)
+            inst_rect1 = inst_text1.get_rect(center=(self.window.get_width() // 2, 450))
+            self.window.blit(inst_text1, inst_rect1)
+
+            inst_text2 = font_inst.render("Pressione ENTER para confirmar", True, COLOR_WHITE)
+            inst_rect2 = inst_text2.get_rect(center=(self.window.get_width() // 2, 480))
+            self.window.blit(inst_text2, inst_rect2)
+
+            # Contador de caracteres
+            counter_text = font_inst.render(f"{len(player_name)}/6", True, COLOR_ORANGE)
+            counter_rect = counter_text.get_rect(center=(self.window.get_width() // 2, 520))
+            self.window.blit(counter_text, counter_rect)
+
+            pygame.display.flip()
+            clock.tick(60)
+
+            # Gerenciar eventos
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        # Se não digitou nada, usar nome padrão
+                        if not player_name.strip():
+                            return f"Player{player_number}"
+                        return player_name.strip()
+
+                    elif event.key == pygame.K_BACKSPACE:
+                        # Remover último caractere
+                        player_name = player_name[:-1]
+
+                    elif event.key == pygame.K_ESCAPE:
+                        # Cancelar e usar nome padrão
+                        return f"Player{player_number}"
+
+                    else:
+                        # Adicionar caractere se não exceder 6 caracteres
+                        if len(player_name) < 6:
+                            char = event.unicode
+                            # Só aceitar letras, números e alguns caracteres especiais
+                            if char.isprintable() and char not in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']:
+                                player_name += char

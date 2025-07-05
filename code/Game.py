@@ -27,7 +27,14 @@ class Game:
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1]]:
                 # se a opção selecionada for "NEW GAME 1P" ou "NEW GAME 2P - COOPERATIVE"
                 level = Level(self.window, "Level1", menu_return, self.fps_index, self.countdown_index)
-                level_return, final_scores = level.run()  # Recebe também os scores finais
+                level_result = level.run()  # Recebe o resultado do level
+
+                # Verifica se o level retornou 3 valores (incluindo nomes) ou 2 valores (sem nomes)
+                if len(level_result) == 3:
+                    level_return, final_scores, final_names = level_result
+                else:
+                    level_return, final_scores = level_result
+                    final_names = {}
 
                 # Salvar scores no banco de dados se o jogo terminou
                 if level_return == "game_over" and final_scores:
@@ -41,13 +48,15 @@ class Game:
 
                     # Só salvar se não for modo ilimitado
                     if game_mode:
-                        # Salvar score do Player 1
+                        # Salvar score do Player 1 com nome personalizado
                         if final_scores.get('Player1', 0) > 0:
-                            self.score_system.save_score("Player 1", final_scores['Player1'], game_mode)
+                            player1_name = final_names.get('Player1', 'Player 1')
+                            self.score_system.save_score(player1_name, final_scores['Player1'], game_mode)
 
-                        # Salvar score do Player 2 se existir
+                        # Salvar score do Player 2 com nome personalizado se existir
                         if final_scores.get('Player2', 0) > 0:
-                            self.score_system.save_score("Player 2", final_scores['Player2'], game_mode)
+                            player2_name = final_names.get('Player2', 'Player 2')
+                            self.score_system.save_score(player2_name, final_scores['Player2'], game_mode)
 
                 # retorna ao menu se o jogo for pausado ou finalizado
                 if level_return in ["menu", "game_over"]:
