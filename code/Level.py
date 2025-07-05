@@ -122,11 +122,11 @@ class Level:
 
                         # Capturar nome do Player 1 se ele tem score > 0
                         if self.score_player1 > 0:
-                            player_names['Player1'] = self.get_player_name(1)
+                            player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
 
                         # Capturar nome do Player 2 se existe e tem score > 0
                         if player2 and self.score_player2 > 0:
-                            player_names['Player2'] = self.get_player_name(2)
+                            player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
 
                         # AGORA mostrar game over e retornar
                         self.game_over(reason="timeout")
@@ -157,11 +157,11 @@ class Level:
 
                 # Capturar nome do Player 1 se ele tem score > 0
                 if self.score_player1 > 0:
-                    player_names['Player1'] = self.get_player_name(1)
+                    player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
 
                 # Capturar nome do Player 2 se existe e tem score > 0
                 if player2 and self.score_player2 > 0:
-                    player_names['Player2'] = self.get_player_name(2)
+                    player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
 
                 self.game_over()
                 final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
@@ -248,84 +248,3 @@ class Level:
 
         pygame.display.flip()
         pygame.time.wait(3000)
-
-    def get_player_name(self, player_number):
-        """Captura o nome do jogador via teclado (máximo 6 caracteres)"""
-        player_name = ""
-        clock = pygame.time.Clock()
-
-        while True:
-            # Atualizar e desenhar o fundo
-            for ent in self.entity_list:
-                if ent.name.startswith('Level1bg'):
-                    self.window.blit(source=ent.surf, dest=ent.rect)
-
-            # Overlay escuro
-            overlay = pygame.Surface(self.window.get_size())
-            overlay.set_alpha(200)
-            overlay.fill((0, 0, 0))
-            self.window.blit(overlay, (0, 0))
-
-            # Título
-            font_title = pygame.font.SysFont(None, 60)
-            title_text = font_title.render(f"DIGITE O NOME DO PLAYER {player_number}", True, COLOR_WHITE)
-            title_rect = title_text.get_rect(center=(self.window.get_width() // 2, 250))
-            self.window.blit(title_text, title_rect)
-
-            # Campo de texto com o nome atual
-            font_input = pygame.font.SysFont(None, 80)
-            input_text = font_input.render(player_name + "_", True, COLOR_ORANGE)
-            input_rect = input_text.get_rect(center=(self.window.get_width() // 2, 350))
-
-            # Desenhar caixa de texto
-            box_rect = pygame.Rect(input_rect.left - 20, input_rect.top - 10, max(200, input_rect.width + 40), input_rect.height + 20)
-            pygame.draw.rect(self.window, COLOR_WHITE, box_rect, 3)
-
-            self.window.blit(input_text, input_rect)
-
-            # Instruções
-            font_inst = pygame.font.SysFont(None, 30)
-            inst_text1 = font_inst.render("Digite seu nome (máximo 6 caracteres)", True, COLOR_WHITE)
-            inst_rect1 = inst_text1.get_rect(center=(self.window.get_width() // 2, 450))
-            self.window.blit(inst_text1, inst_rect1)
-
-            inst_text2 = font_inst.render("Pressione ENTER para confirmar", True, COLOR_WHITE)
-            inst_rect2 = inst_text2.get_rect(center=(self.window.get_width() // 2, 480))
-            self.window.blit(inst_text2, inst_rect2)
-
-            # Contador de caracteres
-            counter_text = font_inst.render(f"{len(player_name)}/6", True, COLOR_ORANGE)
-            counter_rect = counter_text.get_rect(center=(self.window.get_width() // 2, 520))
-            self.window.blit(counter_text, counter_rect)
-
-            pygame.display.flip()
-            clock.tick(60)
-
-            # Gerenciar eventos
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        # Se não digitou nada, usar nome padrão
-                        if not player_name.strip():
-                            return f"Player{player_number}"
-                        return player_name.strip()
-
-                    elif event.key == pygame.K_BACKSPACE:
-                        # Remover último caractere
-                        player_name = player_name[:-1]
-
-                    elif event.key == pygame.K_ESCAPE:
-                        # Cancelar e usar nome padrão
-                        return f"Player{player_number}"
-
-                    else:
-                        # Adicionar caractere se não exceder 6 caracteres
-                        if len(player_name) < 6:
-                            char = event.unicode
-                            # Só aceitar letras, números e alguns caracteres especiais
-                            if char.isprintable() and char not in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']:
-                                player_name += char
