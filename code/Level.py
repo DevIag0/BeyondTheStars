@@ -119,7 +119,8 @@ class Level:
                         remaining_time = 0
                         # Quando o tempo acaba, chama game over com motivo "timeout"
                         self.game_over(reason="timeout")
-                        return "menu"
+                        final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
+                        return "game_over", final_scores
 
                     # Exibe o tempo restante
                     self.level_text(20, f"Tempo Restante: {remaining_time} seg", COLOR_RED, (30, 10))
@@ -140,7 +141,8 @@ class Level:
             jogadores = [e for e in self.entity_list if isinstance(e, Player)]  # Lista de jogadores
             if any(jogador.health <= 0 for jogador in jogadores):
                 self.game_over()
-                return "menu"
+                final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
+                return "game_over", final_scores
 
             # Gerencia os eventos
             for event in pygame.event.get():
@@ -163,7 +165,7 @@ class Level:
                     elif event.key == pygame.K_ESCAPE:  # Tecla ESC para sair do nível
                         if self.paused:
                             # Se estiver pausado, ESC sai do nível
-                            return "menu"
+                            return "menu", None
                         else:
                             # Se não estiver pausado, ESC pausa o jogo
                             self.pause_musica()
