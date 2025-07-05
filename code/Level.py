@@ -143,7 +143,7 @@ class Level:
             if not self.paused:
                 # Verifica colisões e recebe o número de inimigos destruídos por tiros de cada jogador
                 enemies_destroyed_by_shots = EntityMediator.verify_collision(entity_list=self.entity_list)
-                EntityMediator.verify_health(entity_list=self.entity_list)
+                EntityMediator.verify_health(entity_list=self.entity_list, game_mode=self.game_mode)
 
                 # Incrementa o score de cada jogador separadamente
                 self.score_player1 += enemies_destroyed_by_shots['Player1']
@@ -151,7 +151,18 @@ class Level:
 
             # Verifica se algum jogador morreu para exibir Game Over
             jogadores = [e for e in self.entity_list if isinstance(e, Player)]  # Lista de jogadores
-            if any(jogador.health <= 0 for jogador in jogadores):
+
+            # Lógica diferente para single player vs cooperativo
+            game_over_condition = False
+
+            if self.game_mode == MENU_OPTION[1]:  # Modo cooperativo (2 players)
+                # No modo cooperativo, jogo termina apenas quando AMBOS os jogadores morrem
+                game_over_condition = all(jogador.health <= 0 for jogador in jogadores)
+            else:  # Modo single player
+                # No modo single player, jogo termina quando o único jogador morre
+                game_over_condition = any(jogador.health <= 0 for jogador in jogadores)
+
+            if game_over_condition:
                 # Capturar nomes dos jogadores antes do game over por morte
                 player_names = {}
 
@@ -244,7 +255,6 @@ class Level:
             text = font.render("GAME OVER", True, COLOR_ORANGE)
             text_rect = text.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
             self.window.blit(text, text_rect)
-
 
         pygame.display.flip()
         pygame.time.wait(3000)

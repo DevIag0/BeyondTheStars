@@ -92,8 +92,15 @@ class EntityMediator:
         return enemies_destroyed_by_shots
 
     @staticmethod
-    def verify_health(entity_list: list[Entity]):  # Verifica a saúde das entidades
+    def verify_health(entity_list: list[Entity], game_mode=None):  # Verifica a saúde das entidades
         for ent in entity_list[:]:
-            # Só remove se não for Player
-            if ent.health <= 0 and not isinstance(ent, Player):
-                entity_list.remove(ent)
+            if ent.health <= 0:
+                # Se for um Player, só remove no modo cooperativo
+                if isinstance(ent, Player):
+                    # No modo cooperativo, remove o player morto para que o outro continue
+                    # No modo single player, mantém o player para detectar game over
+                    if game_mode == "NEW GAME 2P - COOPERATIVE":
+                        entity_list.remove(ent)
+                else:
+                    # Remove outras entidades normalmente
+                    entity_list.remove(ent)
