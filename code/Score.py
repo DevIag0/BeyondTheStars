@@ -11,14 +11,14 @@ class Score(Menu):
         self.db_proxy = DatabaseProxy()
         self.selected_option = 0
         self.clock = pygame.time.Clock()
-        self.options = ["VER TOP 10", "ESTATÍSTICAS POR JOGADOR", "VOLTAR"]
+        self.options = ["TOP 10 - 60 SEGUNDOS", "TOP 10 - 120 SEGUNDOS", "ESTATÍSTICAS POR JOGADOR", "VOLTAR"]
 
-    def save_score(self, player_name, score):
-        """Salva a pontuação de um jogador"""
-        self.db_proxy.save_score(player_name, score)
+    def save_score(self, player_name, score, game_mode):
+        """Salva a pontuação de um jogador com o modo de jogo"""
+        self.db_proxy.save_score(player_name, score, game_mode)
 
-    def display_top_scores(self):
-        """Exibe as 10 maiores pontuações organizadas em linha"""
+    def display_top_scores_by_mode(self, game_mode, mode_name):
+        """Exibe as 10 maiores pontuações organizadas em linha para um modo específico"""
         while True:
             # Atualizar e desenhar backgrounds
             for bg in self.backgrounds:
@@ -26,14 +26,14 @@ class Score(Menu):
                 self.window.blit(bg.surf, bg.rect)
 
             # Título
-            self.menu_text(text_size=50, text="TOP 10 PONTUAÇÕES", text_color=COLOR_WHITE,
+            self.menu_text(text_size=50, text=f"TOP 10 - {mode_name}", text_color=COLOR_WHITE,
                            text_center_pos=(self.window.get_width() // 2, 80))
 
-            # Obter e exibir top scores
-            top_scores = self.db_proxy.get_top_scores(10)
+            # Obter e exibir top scores do modo específico
+            top_scores = self.db_proxy.get_top_scores(10, game_mode)
 
             if not top_scores:
-                self.menu_text(text_size=30, text="Nenhuma pontuação registrada ainda", text_color=COLOR_ORANGE,
+                self.menu_text(text_size=30, text=f"Nenhuma pontuação registrada no modo {mode_name}", text_color=COLOR_ORANGE,
                                text_center_pos=(self.window.get_width() // 2, 300))
             else:
                 # Cabeçalho organizado em colunas
@@ -179,11 +179,13 @@ class Score(Menu):
                     if event.key == pygame.K_UP:
                         self.selected_option = (self.selected_option - 1) % len(self.options)
                     if event.key == pygame.K_RETURN:
-                        if self.selected_option == 0:  # VER TOP 10
-                            self.display_top_scores()
-                        elif self.selected_option == 1:  # ESTATÍSTICAS POR JOGADOR
+                        if self.selected_option == 0:  # TOP 10 - 60 SEGUNDOS
+                            self.display_top_scores_by_mode('60_seconds', '60 SEGUNDOS')
+                        elif self.selected_option == 1:  # TOP 10 - 120 SEGUNDOS
+                            self.display_top_scores_by_mode('120_seconds', '120 SEGUNDOS')
+                        elif self.selected_option == 2:  # ESTATÍSTICAS POR JOGADOR
                             self.display_player_stats()
-                        elif self.selected_option == 2:  # VOLTAR
+                        elif self.selected_option == 3:  # VOLTAR
                             return
                     if event.key == pygame.K_ESCAPE:
                         return

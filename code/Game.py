@@ -31,13 +31,23 @@ class Game:
 
                 # Salvar scores no banco de dados se o jogo terminou
                 if level_return == "game_over" and final_scores:
-                    # Salvar score do Player 1
-                    if final_scores.get('Player1', 0) > 0:
-                        self.score_system.save_score("Player 1", final_scores['Player1'])
+                    # Determinar o modo de jogo baseado no countdown_index
+                    if self.countdown_index == 0:  # 60 segundos
+                        game_mode = '60_seconds'
+                    elif self.countdown_index == 1:  # 120 segundos
+                        game_mode = '120_seconds'
+                    else:  # Tempo ilimitado - não salvar no banco
+                        game_mode = None
 
-                    # Salvar score do Player 2 se existir
-                    if final_scores.get('Player2', 0) > 0:
-                        self.score_system.save_score("Player 2", final_scores['Player2'])
+                    # Só salvar se não for modo ilimitado
+                    if game_mode:
+                        # Salvar score do Player 1
+                        if final_scores.get('Player1', 0) > 0:
+                            self.score_system.save_score("Player 1", final_scores['Player1'], game_mode)
+
+                        # Salvar score do Player 2 se existir
+                        if final_scores.get('Player2', 0) > 0:
+                            self.score_system.save_score("Player 2", final_scores['Player2'], game_mode)
 
                 # retorna ao menu se o jogo for pausado ou finalizado
                 if level_return in ["menu", "game_over"]:
