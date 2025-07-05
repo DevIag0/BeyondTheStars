@@ -118,15 +118,18 @@ class Level:
                     if remaining_time <= 0:
                         remaining_time = 0
                         # Quando o tempo acaba, capturar nomes dos jogadores ANTES do game over
+                        # APENAS se não for modo ilimitado
                         player_names = {}
 
-                        # Capturar nome do Player 1 se ele tem score > 0
-                        if self.score_player1 > 0:
-                            player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
+                        # Só capturar nomes se não for modo ilimitado (countdown_index != 2)
+                        if self.countdown_index != 2:
+                            # Capturar nome do Player 1 se ele tem score > 0
+                            if self.score_player1 > 0:
+                                player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
 
-                        # Capturar nome do Player 2 se existe e tem score > 0
-                        if player2 and self.score_player2 > 0:
-                            player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
+                            # Capturar nome do Player 2 se existe e tem score > 0
+                            if player2 and self.score_player2 > 0:
+                                player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
 
                         # AGORA mostrar game over e retornar
                         self.game_over(reason="timeout")
@@ -164,15 +167,18 @@ class Level:
 
             if game_over_condition:
                 # Capturar nomes dos jogadores antes do game over por morte
+                # APENAS se não for modo ilimitado
                 player_names = {}
 
-                # Capturar nome do Player 1 se ele tem score > 0
-                if self.score_player1 > 0:
-                    player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
+                # Só capturar nomes se não for modo ilimitado (countdown_index != 2)
+                if self.countdown_index != 2:
+                    # Capturar nome do Player 1 se ele tem score > 0
+                    if self.score_player1 > 0:
+                        player_names['Player1'] = Player.get_player_name(self.window, self.entity_list, 1)
 
-                # Capturar nome do Player 2 se existe e tem score > 0
-                if player2 and self.score_player2 > 0:
-                    player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
+                    # Capturar nome do Player 2 se existe e tem score > 0
+                    if player2 and self.score_player2 > 0:
+                        player_names['Player2'] = Player.get_player_name(self.window, self.entity_list, 2)
 
                 self.game_over()
                 final_scores = {'Player1': self.score_player1, 'Player2': self.score_player2}
