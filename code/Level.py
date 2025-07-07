@@ -91,7 +91,7 @@ class Level:
             # imprimir o texto do nível
             self.level_text(20, f"{self.name}", COLOR_RED, (self.window.get_width() // 2 - 20, 10))
             self.level_text(20, f"FPS: {int(clock.get_fps())}", COLOR_RED, (self.window.get_width() - 180, 10))
-            self.level_text(20, f"Entidades: {len(self.entity_list) - 9}", COLOR_RED, (self.window.get_width() - 300, 10))
+
 
             # Mostra a vida e score do Player1
             player1 = next((e for e in self.entity_list if isinstance(e, Player) and e.name == 'Player1'), None)
@@ -264,3 +264,14 @@ class Level:
 
         pygame.display.flip()
         pygame.time.wait(3000)
+
+        # CORREÇÃO: Limpar todos os eventos acumulados durante o wait
+        pygame.event.clear()
+
+        # CORREÇÃO: Aguardar até que todas as teclas sejam liberadas
+        while any(pygame.key.get_pressed()):
+            pygame.event.pump()  # Processa eventos sem consumi-los
+            pygame.time.wait(50)  # Pequena pausa para não sobrecarregar o CPU
+
+        # CORREÇÃO: Limpar eventos mais uma vez após liberação das teclas
+        pygame.event.clear()
