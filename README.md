@@ -1,10 +1,10 @@
-# 🚀 Beyond the Stars - Space Shooter Game
+  Beyond the Stars - Space Shooter Game
 
-## 📋 Sobre o Projeto
+  Sobre o Projeto
 
 Este é um projeto acadêmico desenvolvido para a disciplina de **Linguagem de Programação** da faculdade. O jogo "Beyond the Stars" é um space shooter clássico desenvolvido em Python utilizando a biblioteca Pygame, implementando diversos padrões de projeto e conceitos de programação orientada a objetos.
 
-## 🎮 Características do Jogo
+  Características do Jogo
 
 - **Modo Single Player**: Jogue sozinho contra ondas de inimigos
 - **Modo Cooperativo**: Jogue com um amigo (2 jogadores)
@@ -19,14 +19,14 @@ Este é um projeto acadêmico desenvolvido para a disciplina de **Linguagem de P
 - **Menu de Pausa**: Pause o jogo a qualquer momento
 - **Background Parallax**: Efeito de profundidade nos backgrounds
 
-## 🛠️ Tecnologias Utilizadas
+    Tecnologias Utilizadas
 
 - **Python 3.13**: Linguagem principal do projeto
 - **Pygame 2.6.1**: Biblioteca para desenvolvimento de jogos
 - **SQLite3**: Banco de dados para sistema de pontuação
 - **Programação Orientada a Objetos**: Base arquitetural do projeto
 
-## 🏗️ Arquitetura do Projeto
+ Arquitetura do Projeto
 
 O projeto segue uma arquitetura bem estruturada com separação de responsabilidades:
 
@@ -47,37 +47,37 @@ SpaceShooter/
     └── ...
 ```
 
-## 🎯 Padrões de Projeto Implementados
+ Padrões de Projeto Implementados
 
-### 1. **Factory Pattern** (`EntityFactory.py`)
+ 1. **Factory Pattern** (`EntityFactory.py`)
 - Responsável pela criação de diferentes tipos de entidades
 - Centraliza a lógica de instanciação de jogadores, inimigos, meteoros e backgrounds
 - Facilita a adição de novos tipos de entidades
 - Permite a criação dinâmica de entidades com base em configurações
 
-### 2. **Mediator Pattern** (`EntityMediator.py`)
+ 2. **Mediator Pattern** (`EntityMediator.py`)
 - Gerencia a comunicação entre diferentes entidades
 - Centraliza a lógica de colisões e interações
 - Desacopla as entidades umas das outras
 
-### 3. **Template Method Pattern** (`Entity.py`)
+ 3. **Template Method Pattern** (`Entity.py`)
 - Classe abstrata que define a estrutura comum para todas as entidades
 - Método abstrato `move()` implementado pelas subclasses
 - Garante consistência na interface das entidades
 
-### 4. **Proxy Pattern** (`DatabaseProxy.py`)
+ 4. **Proxy Pattern** (`DatabaseProxy.py`)
 - Controla o acesso ao banco de dados SQLite3
 - Gerencia operações de leitura e escrita do sistema de score
 - Abstrai a complexidade das operações de banco de dados
 - Fornece interface simplificada para o sistema de pontuação
 
-### 5. **Strategy Pattern** (implícito)
+ 5. **Strategy Pattern** (implícito)
 - Diferentes comportamentos de movimento para jogadores e inimigos
 - Diferentes tipos de tiro para cada entidade
 
-## 🎨 Estrutura de Classes
+ 🎨 Estrutura de Classes
 
-### Hierarquia de Entidades
+ Hierarquia de Entidades
 ```
 Entity (ABC)
 ├── Player
@@ -135,7 +135,7 @@ Entity (ABC)
 - Operações CRUD para sistema de score
 - Consultas otimizadas para rankings
 
-## 🎮 Controles
+##  Controles
 
 ### Jogador 1
 - **Movimento**: Setas do teclado
@@ -155,7 +155,7 @@ Entity (ABC)
 ### Lista Completa de Comandos
 Acesse no menu "Opções" → "Comandos" para ver todos os controles disponíveis.
 
-## 🚀 Como Executar
+##  Como Executar
 
 1. **Instale as dependências**:
 ```bash
@@ -167,11 +167,11 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## 📦 Dependências
+##  Dependências
 
 - `pygame==2.6.1`: Biblioteca principal para desenvolvimento do jogo
 
-## 🎯 Funcionalidades Implementadas
+##  Funcionalidades Implementadas
 
 ### Sistema de Entidades
 - ✅ Criação dinâmica de entidades via Factory
@@ -216,7 +216,7 @@ python main.py
 - ✅ Rankings separados por modo de tempo
 - ✅ Estatísticas dos top 3 jogadores
 
-## 🧠 Conceitos de Programação Aplicados
+##  Conceitos de Programação Aplicados
 
 ### Programação Orientada a Objetos
 - **Encapsulamento**: Propriedades e métodos encapsulados nas classes
@@ -236,7 +236,7 @@ python main.py
 - **Modularização**: Código organizado em módulos específicos
 - **Documentação**: Comentários explicativos no código
 
-## 👥 Desenvolvimento Acadêmico
+##  Desenvolvimento Acadêmico
 
 Este projeto foi desenvolvido como parte do currículo da disciplina de Linguagem de Programação, demonstrando:
 
@@ -246,7 +246,7 @@ Este projeto foi desenvolvido como parte do currículo da disciplina de Linguage
 - Uso de bibliotecas externas (Pygame)
 - Desenvolvimento de jogos em Python
 
-## 🎓 Aprendizados
+##  Aprendizados
 
 Durante o desenvolvimento deste projeto, foram aplicados e consolidados os seguintes conceitos:
 
